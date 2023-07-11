@@ -4,7 +4,7 @@ public class Articolo {
 	private String codice;
 	private String sigla;
 	private int quantità;
-	
+	//
 	public Articolo	(String codice, String sigla, int quantità) {
 		this.codice = codice;
 		this.sigla = sigla;
