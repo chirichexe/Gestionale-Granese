@@ -1,33 +1,69 @@
 package inventario.model;
 
-import java.util.ArrayList;
+import java.util.*;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 public class Magazzino {
 	private Map<Integer, List<Articolo>> magazzino;
-	private int reparti;
+	private int dimensione;
 	
 	public Magazzino(int dim) {
 		magazzino = new TreeMap<>();
 		//ricevo la dimensione del magazzino e inizializzo una mappa che associa a
 		//ogni cella del magazzino una lista vuota
-		this.reparti = dim;
+		this.dimensione = dim;
 		for(int i = 0; i<dim; i++) {
 			magazzino.put(i+1, new ArrayList<Articolo>());
 		}
 	}
+	
+	public Magazzino(Map<Integer, List<Articolo>> magazzino, int dim) {
+		this.dimensione = dim;
+		//permette di creare una lista 
+		if (magazzino.keySet().size() > dim) throw new IllegalArgumentException("Magazzino più grande della dimensione dichiarata!");
+		this.magazzino = magazzino;
+		sortByKeys(magazzino);
+	}
+	
+	public static <K extends Comparable, V> Map<K, V> sortByKeys(Map<K, V> map)
+    {
+        // crea un elenco di chiavi della mappa e ordinalo
+        List<K> keys = new ArrayList(map.keySet());
+        Collections.sort(keys);
+ 
+        // crea una `LinkedHashMap` vuota con ordine di inserimento
+        Map<K, V> linkedHashMap = new LinkedHashMap<>();
+ 
+        // per ogni chiave nell'elenco ordinato, inserisci il valore-chiave
+        // accoppia in `LinkedHashMap`
+        for (K key: keys) {
+            linkedHashMap.put(key, map.get(key));
+        }
+ 
+        return linkedHashMap;
+    }
 
-	public int getReparti() {
-		return reparti;
+	public int getDimensione() {
+		return dimensione;
+	}
+	
+	public Map<Integer, List<Articolo>> get() {
+		return magazzino;
+	}
+	
+	public Set<Integer> getScaffali(){
+		return magazzino.keySet();
 	}
 	
 	public void inserisci(int r, Articolo a) {
-		if(r+1 > reparti || r < 1 || a==null) throw new IllegalArgumentException("Errore nell'inserimento dell'articolo");
-		magazzino.get(r+1).add(a);
+		if(r+1 > dimensione || r < 1 || a==null) throw new IllegalArgumentException("Errore nell'inserimento dell'articolo");
+		magazzino.get(r).add(a);
 	}
 	
 	public void inserisci(int r, List<Articolo> l) {
@@ -59,7 +95,7 @@ public class Magazzino {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(magazzino, reparti);
+		return Objects.hash(magazzino, dimensione);
 	}
 
 	@Override
@@ -71,7 +107,7 @@ public class Magazzino {
 		if (getClass() != obj.getClass())
 			return false;
 		Magazzino other = (Magazzino) obj;
-		return Objects.equals(magazzino, other.magazzino) && reparti == other.reparti;
+		return Objects.equals(magazzino, other.magazzino) && dimensione == other.dimensione;
 	}
 	
 	

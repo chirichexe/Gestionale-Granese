@@ -1,6 +1,9 @@
 package inventario.model;
 
+import java.util.Objects;
+
 public class Articolo {
+
 	private String codice;
 	private String sigla;
 	
@@ -27,7 +30,22 @@ public class Articolo {
 		return sigla;
 	}
 	
-	
+	@Override
+	public int hashCode() {
+		return Objects.hash(codice, sigla);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Articolo other = (Articolo) obj;
+		return Objects.equals(codice, other.codice) && Objects.equals(sigla, other.sigla);
+	}
 	
 	
 }

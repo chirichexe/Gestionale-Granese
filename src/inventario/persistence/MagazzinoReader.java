@@ -7,5 +7,5 @@ import java.util.Map;
 import inventario.model.*;
 
 public interface MagazzinoReader {
-	Map<Integer, List<Articolo>> readRates(Reader reader) throws IOException, BadFileFormatException;
+	Magazzino leggiMagazzino(Reader reader) throws IOException, BadFileFormatException;
 }
