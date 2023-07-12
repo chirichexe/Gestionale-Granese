@@ -41,7 +41,7 @@ public class InventarioGraneseApp extends Application {
 				Controller controller = new ControllerGranese(magazzino);
 				
 				MainPane mainPanel = new MainPane(controller);
-				Scene scene = new Scene(mainPanel, 200, 200, Color.WHITE);
+				Scene scene = new Scene(mainPanel, 1000, 700, Color.WHITE);
 				stage.setScene(scene);
 				stage.show();
 				
