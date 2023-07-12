@@ -28,7 +28,6 @@ public class MyMain {
 		StringReader reader = new StringReader(toRead);
 		MagazzinoReader magazzinoReader = new MagazzinoGraneseReader();
 		Magazzino mag = magazzinoReader.leggiMagazzino(reader);
-		
 		System.out.println(mag.toString());
 	}
 
