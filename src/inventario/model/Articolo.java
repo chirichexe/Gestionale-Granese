@@ -19,7 +19,7 @@ public class Articolo {
 
 	@Override
 	public String toString() {
-		return "	[" + codice + " - " + sigla + "]";
+		return "[" + codice + " - " + sigla + "]";
 	}
 
 	public String getCodice() {

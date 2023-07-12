@@ -72,11 +72,16 @@ public class Magazzino {
 		}
 	}
 	
-	public int posizioneArticolo(Articolo a) {
+	public int posizioneArticolo(String a) {
 		for(int i: magazzino.keySet()) {
-			if (magazzino.get(i).contains(a)) return i;
+			for(int j=0;j<magazzino.get(i).size();j++)
+				if (magazzino.get(i).get(j).getCodice().equalsIgnoreCase(a.trim())) return i;
 		}
 		return 0;
+	}
+	
+	public List<Articolo> getScaffale(int i){
+		return magazzino.get(i);
 	}
 	
 	@Override
@@ -84,11 +89,11 @@ public class Magazzino {
 		StringBuilder sb = new StringBuilder("");
 		sb.append("Magazzino GRANESE S.R.L. \n\n");
 		for(int a: magazzino.keySet()) {
-			sb.append("	Scaffale " + a + ": ").append(magazzino
+			sb.append("Scaffale " + a + ": \n	").append(magazzino
 					.get(a)
 					.stream()
 					.map(i->i.toString())
-					.collect(Collectors.joining("\n		"))).append("\n\n");
+					.collect(Collectors.joining("\n	"))).append("\n\n");
 		}
 		return sb.toString();
 	}
