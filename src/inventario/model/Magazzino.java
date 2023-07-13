@@ -1,7 +1,6 @@
 package inventario.model;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Magazzino {
 	private List<Reparto> magazzino;
