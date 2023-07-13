@@ -4,6 +4,7 @@ import java.util.stream.Collectors;
 
 
 import inventario.controller.Controller;
+import inventario.model.Reparto;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
@@ -23,7 +24,7 @@ public class MainPane extends BorderPane{
 	private TextField articoloDaCercare;
 	private TextField siTrova;
 	private Button cerca;
-	private ComboBox<Integer> scaffaliBox;
+	private ComboBox<Reparto> repartiBox;
 	
 	public MainPane(Controller controller) {
 		this.controller = controller;
@@ -36,6 +37,7 @@ public class MainPane extends BorderPane{
 			sinistra.getChildren().add(new Label("Magazzino"));
 			sinistra.setSpacing(10);
 			HBox gestioneSinistra1 = new HBox();
+			gestioneSinistra1.setSpacing(20);
 			//gestione sinistra 1
 			VBox gestioneMagazzino = new VBox();
 			VBox gestioneScaffali = new VBox();
@@ -44,10 +46,10 @@ public class MainPane extends BorderPane{
 				magazzinoTextArea.setText(controller.getMagazzino().toString());
 				gestioneMagazzino.getChildren().add(magazzinoTextArea);
 				scaffaliTextArea = new TextArea();
-				scaffaliTextArea.setPrefHeight(150);
-				scaffaliBox = new ComboBox<>(FXCollections.observableArrayList(controller.getMagazzino().getScaffali()));
-				scaffaliBox.setOnAction(this::handleScaffale);
-				gestioneScaffali.getChildren().addAll(new Label("Ottieni lo scaffale "), scaffaliBox);
+				scaffaliTextArea.setPrefSize(250, 120);
+				repartiBox = new ComboBox<>(FXCollections.observableArrayList(controller.getMagazzino().get()));
+				repartiBox.setOnAction(this::handleScaffale);
+				gestioneScaffali.getChildren().addAll(new Label("Ottieni lo scaffale "), repartiBox);
 				gestioneScaffali.getChildren().add(scaffaliTextArea);
 			}
 			gestioneSinistra1.getChildren().addAll(gestioneMagazzino, gestioneScaffali);
@@ -76,11 +78,11 @@ public class MainPane extends BorderPane{
 	}
 	
 	private void handleScaffale(ActionEvent e) {
-		scaffaliTextArea.setText(controller.getMagazzino().getScaffale(scaffaliBox.getValue()).stream().map(i->i.toString()).collect(Collectors.joining("\n")));
+		//scaffaliTextArea.setText(controller.getMagazzino().getScaffale(repartiBox.getValue()).stream().map(i->i.toString()).collect(Collectors.joining("\n")));
 	}
 	
 	private void cercaEl(ActionEvent e) {
-		if(controller.getMagazzino().posizioneArticolo(articoloDaCercare.getText())==0) InventarioGraneseApp.alertError("Errore", "Articolo non trovato", "Controlla bene il magazzino!");
-		else siTrova.setText("Scaffale " + controller.getMagazzino().posizioneArticolo(articoloDaCercare.getText()));
+		//if(controller.getMagazzino().posizioneArticolo(articoloDaCercare.getText())==0) InventarioGraneseApp.alertError("Errore", "Articolo non trovato", "Controlla bene il magazzino!");
+		//else siTrova.setText("Scaffale " + controller.getMagazzino().posizioneArticolo(articoloDaCercare.getText()));
 	}
 }

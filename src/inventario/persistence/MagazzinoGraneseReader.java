@@ -31,11 +31,11 @@ public class MagazzinoGraneseReader implements MagazzinoReader {
 			if(line.isBlank()) continue;
 			String[] items	= line.split(":");
 			if (!items[0].toLowerCase().contains("scaffale")) throw new BadFileFormatException("La prima riga deve essere uno scaffale! ");
-			items[0] = items[0].toLowerCase().replace("scaffale", "");
+			items[0] = items[0].replace("scaffale", "");
 			//Lettura primo campo: scaffale 1, A (esempio)
 			String[] primoCampo = items[0].split(",");
 			int scaffale; //
-			String reparto = primoCampo[1].trim().toUpperCase(); //
+			String reparto = primoCampo[1].trim(); //
 			try {
 				scaffale = Integer.parseInt(primoCampo[0].trim());
 			}catch(Exception e) {
