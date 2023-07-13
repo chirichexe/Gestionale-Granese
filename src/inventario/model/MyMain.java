@@ -11,11 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import inventario.controller.Controller;
+import inventario.controller.ControllerGranese;
 import inventario.persistence.*;
 
 public class MyMain {
 
 	public static void main(String[] args) throws IOException, BadFileFormatException {
+		
 		Reparto r = new Reparto("PianoSotto");
 		r.inserisci(1, new Articolo("CHRDVD", "CIAO"));
 		r.inserisci(1, new Articolo("CHRCH"));
@@ -55,11 +58,17 @@ public class MyMain {
 		m.inserisciArticoloScaffale("test", 3, new Articolo("Articolo32", "vjs"));
 		
 		//prova reader
-		
+		/*
 		FileWriter w = new FileWriter("magazzino.txt");
 		w.append("ciao\n");
 		w.append("casc");
-		w.close();
+		w.close();*/
+		
+		Controller controller = new ControllerGranese(m);
+		System.out.println(controller.stampaMagazzino());
+		controller.aggiungiArticolo(Scaffale.of(1, "PianoSotto"), new Articolo("XXXXXX"));
+		System.out.println("------------------------------");
+		System.out.println(controller.stampaMagazzino());
 	}
 
 }

@@ -18,6 +18,16 @@ public class Magazzino {
 		return magazzino.size();
 	}
 	
+	public List<Articolo> getArticoli() {
+		List<Articolo> totaleArticoli = new ArrayList<>();
+		for(Reparto r: magazzino) {
+			for(Scaffale s: r.getScaffali()) {
+				totaleArticoli.addAll(r.getArticoliScaffale(s));
+			}
+		}
+		return totaleArticoli;
+	}
+	
 	public boolean containsReparto(String r) {
 		return magazzino.stream().filter(i->i.getID().equals(r)).collect(Collectors.toList()).size()>0;
 	}
@@ -43,6 +53,7 @@ public class Magazzino {
 	
 	public boolean inserisciArticoloScaffale(String id, int s, Articolo a) {
 		if (!containsReparto(id)) return false;
+		if(getArticoli().contains(a)) return false;
 		getReparto(id).get().inserisci(s, a);;
 		return true;
 	}
@@ -98,9 +109,8 @@ public class Magazzino {
 		return Objects.equals(magazzino, other.magazzino);
 	}
 
-	public void inserisci(Scaffale scaffale, Articolo a) {
-		inserisciArticoloScaffale(scaffale.getReparto(), scaffale.getNumero(), a);
-		
+	public boolean inserisci(Scaffale scaffale, Articolo a) {
+		return (inserisciArticoloScaffale(scaffale.getReparto(), scaffale.getNumero(), a));
 	}
 
 

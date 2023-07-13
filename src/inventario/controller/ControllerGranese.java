@@ -8,24 +8,18 @@ import inventario.model.Scaffale;
 
 public class ControllerGranese implements Controller{
 	private Magazzino magazzino;
-	private PrintWriter pw;
+	//private PrintWriter pw;
 	
 	public ControllerGranese(Magazzino m) {
 		this.magazzino = m;
-		this.pw = null;
-		try {
-			pw = new PrintWriter("magazzino.txt");
-		}catch(Exception e) {
-			
-		}
 	}
 	@Override
 	public Magazzino getMagazzino() {
 		return magazzino;
 	}
 	@Override
-	public void aggiungiArticolo(Scaffale scaffale, Articolo a) {
-		magazzino.inserisci(scaffale, a);
+	public boolean aggiungiArticolo(Scaffale scaffale, Articolo a) {
+		return magazzino.inserisci(scaffale, a);
 	}
 	@Override
 	public String stampaMagazzino() {
@@ -33,7 +27,8 @@ public class ControllerGranese implements Controller{
 	}
 	@Override
 	public void scriviSuFile(String s) {
-		pw.append(s);
-		pw.close();
+		// TODO Auto-generated method stub
+		
 	}
+	
 }

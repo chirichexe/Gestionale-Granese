@@ -43,7 +43,7 @@ public class Scaffale implements Comparable<Scaffale>{
 
 	@Override
 	public String toString() {
-		return "Reparto " + reparto + " - Scaffale " + numero;
+		return "Reparto: " + reparto + "- Scaffale " + numero;
 	}
 
 
