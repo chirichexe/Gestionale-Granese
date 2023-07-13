@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
@@ -22,8 +23,6 @@ public class Reparto {
 		this.reparto = reparto;
 	}
 	
-
-
 	public int getID() {
 		return id;
 	}
@@ -56,8 +55,19 @@ public class Reparto {
 		return 0;
 	}
 	
-	public List<Articolo> getScaffale(int i){
+	public List<Articolo> getArticoliScaffale(int i){
 		return reparto.get(Scaffale.of(i, id));
+	}
+	
+	public List<Articolo> getArticoliScaffale(Scaffale s){
+		return reparto.get(s);
+	}
+	
+	public Optional<Scaffale> getScaffale(int i){
+		for(Scaffale s: reparto.keySet()) {
+			if (s.getNumero() == i) return Optional.of(s); 
+		}
+		return Optional.empty();
 	}
 	
 	@Override

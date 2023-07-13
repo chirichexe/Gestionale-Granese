@@ -25,10 +25,26 @@ public class MyMain {
 		test.add(new Articolo("come"));
 		test.add(new Articolo("va", "a casa"));
 		r.inserisci(4, test);
-		r.inserisci(3, new Articolo("Prova"));
+		r.inserisci(3, new Articolo("Provola"));
 		r.inserisci(20, new Articolo("uf"));
 		r.inserisci(8, new Articolo("aa"));
-		System.out.println(r.toString());
+		
+		Reparto s = new Reparto('B');
+		s.inserisci(1, new Articolo("wve", "CIAO"));
+		s.inserisci(1, new Articolo("CHRCHw"));
+		s.inserisci(1, new Articolo("TESTw"));
+		s.inserisci(1, new Articolo("PAR", "WG"));
+		List<Articolo> test1 = new ArrayList<Articolo>();
+		test1.add(new Articolo("ciao"));
+		test1.add(new Articolo("zio"));
+		test1.add(new Articolo("come"));
+		s.inserisci(4, test);
+		s.inserisci(3, new Articolo("Prova"));
+		
+		Magazzino m = new Magazzino();
+		m.aggiungiReparto(r);
+		m.aggiungiReparto(s);
+		System.out.println(m.trovaArticolo("uf"));
 	}
 
 }

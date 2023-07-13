@@ -1,106 +1,74 @@
 package inventario.model;
 
 import java.util.*;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 public class Magazzino {
-	private Map<Integer, List<Articolo>> magazzino;
-	private int dimensione;
+	private List<Reparto> magazzino;
 	
-	public Magazzino(int dim) {
-		magazzino = new TreeMap<>();
-		//ricevo la dimensione del magazzino e inizializzo una mappa che associa a
-		//ogni cella del magazzino una lista vuota
-		this.dimensione = dim;
-		for(int i = 0; i<dim; i++) {
-			magazzino.put(i+1, new ArrayList<Articolo>());
-		}
+	public Magazzino() {
+		magazzino = new ArrayList<Reparto>();
 	}
 	
-	public Magazzino(Map<Integer, List<Articolo>> magazzino, int dim) {
-		this.dimensione = dim;
-		//permette di creare una lista 
-		if (magazzino.keySet().size() > dim) throw new IllegalArgumentException("Magazzino più grande della dimensione dichiarata!");
+	public Magazzino(List<Reparto> magazzino) {
 		this.magazzino = magazzino;
-		sortByKeys(magazzino);
 	}
-	
-	public static <K extends Comparable, V> Map<K, V> sortByKeys(Map<K, V> map)
-    {
-        // crea un elenco di chiavi della mappa e ordinalo
-        List<K> keys = new ArrayList(map.keySet());
-        Collections.sort(keys);
- 
-        // crea una `LinkedHashMap` vuota con ordine di inserimento
-        Map<K, V> linkedHashMap = new LinkedHashMap<>();
- 
-        // per ogni chiave nell'elenco ordinato, inserisci il valore-chiave
-        // accoppia in `LinkedHashMap`
-        for (K key: keys) {
-            linkedHashMap.put(key, map.get(key));
-        }
- 
-        return linkedHashMap;
-    }
 
 	public int getDimensione() {
-		return dimensione;
+		return magazzino.size();
 	}
 	
-	public Map<Integer, List<Articolo>> get() {
+	public List<Reparto> get() {
 		return magazzino;
 	}
 	
-	public Set<Integer> getScaffali(){
-		return magazzino.keySet();
+	public void aggiungiReparto(char id) {
+		magazzino.add(new Reparto(id));
 	}
 	
-	public void inserisci(int r, Articolo a) {
-		if(r+1 > dimensione || r < 1 || a==null) throw new IllegalArgumentException("Errore nell'inserimento dell'articolo");
-		magazzino.get(r).add(a);
+	public void aggiungiReparto(Reparto r) {
+		magazzino.add(r);
 	}
 	
-	public void inserisci(int r, List<Articolo> l) {
+	public void inserisciArticoloScaffale(char id, int s, Articolo a) {
+		magazzino.get(id).inserisci(s, a);
+	}
+	
+	public void inserisciArticoliScaffale(char id, int s, List<Articolo> l) {
 		for(Articolo a: l) {
-			inserisci(r, a);
+			inserisciArticoloScaffale(id, s, a);
 		}
 	}
 	
-	public int posizioneArticolo(String a) {
-		for(int i: magazzino.keySet()) {
-			for(int j=0;j<magazzino.get(i).size();j++)
-				if (magazzino.get(i).get(j).getCodice().equalsIgnoreCase(a.trim())) return i;
+	public Optional<Scaffale> trovaArticolo(String a) {
+		for(Reparto r: magazzino) {
+			for(Scaffale scaffale : r.getScaffali()) {
+				for(int i = 0;i< r.getArticoliScaffale(scaffale).size();i++) {
+					if (r.getArticoliScaffale(scaffale).get(i).getCodice().equalsIgnoreCase(a)) 
+						return Optional.of(scaffale);
+				}
+			}
 		}
-		return 0;
+		return Optional.empty();
 	}
 	
-	public List<Articolo> getScaffale(int i){
-		return magazzino.get(i);
+	public List<Articolo> getScaffale(char id, int i){
+		return magazzino.get(id).getArticoliScaffale(i);
 	}
 	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("");
 		sb.append("Magazzino GRANESE S.R.L. \n\n");
-		for(int a: magazzino.keySet()) {
-			sb.append("Scaffale " + a + ": \n	").append(magazzino
-					.get(a)
-					.stream()
-					.map(i->i.toString())
-					.collect(Collectors.joining("\n	"))).append("\n\n");
+		for(Reparto r: magazzino) {
+			sb.append(r.toString() + "\n\n");
 		}
 		return sb.toString();
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(magazzino, dimensione);
+		return Objects.hash(magazzino);
 	}
 
 	@Override
@@ -112,8 +80,10 @@ public class Magazzino {
 		if (getClass() != obj.getClass())
 			return false;
 		Magazzino other = (Magazzino) obj;
-		return Objects.equals(magazzino, other.magazzino) && dimensione == other.dimensione;
+		return Objects.equals(magazzino, other.magazzino);
 	}
+
+
 	
 	
 }
