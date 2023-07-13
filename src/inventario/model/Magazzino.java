@@ -1,6 +1,7 @@
 package inventario.model;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Magazzino {
 	private List<Reparto> magazzino;
@@ -17,11 +18,22 @@ public class Magazzino {
 		return magazzino.size();
 	}
 	
+	public boolean containsReparto(String r) {
+		return magazzino.stream().filter(i->i.getID().equals(r)).collect(Collectors.toList()).size()>0;
+	}
+	
+	public Optional<Reparto> getReparto(String r) {
+		for(int i = 0; i<magazzino.size() ;i++) {
+			if (magazzino.get(i).getID().equals(r)) return Optional.of(magazzino.get(i));
+		}
+		return Optional.empty();
+	}
+	
 	public List<Reparto> get() {
 		return magazzino;
 	}
 	
-	public void aggiungiReparto(char id) {
+	public void aggiungiReparto(String id) {
 		magazzino.add(new Reparto(id));
 	}
 	
@@ -29,14 +41,18 @@ public class Magazzino {
 		magazzino.add(r);
 	}
 	
-	public void inserisciArticoloScaffale(char id, int s, Articolo a) {
-		magazzino.get(id).inserisci(s, a);
+	public boolean inserisciArticoloScaffale(String id, int s, Articolo a) {
+		if (!containsReparto(id)) return false;
+		getReparto(id).get().inserisci(s, a);;
+		return true;
 	}
 	
-	public void inserisciArticoliScaffale(char id, int s, List<Articolo> l) {
+	public boolean inserisciArticoliScaffale(String id, int s, List<Articolo> l) {
+		if (!containsReparto(id)) return false;
 		for(Articolo a: l) {
 			inserisciArticoloScaffale(id, s, a);
 		}
+		return true;
 	}
 	
 	public Optional<Scaffale> trovaArticolo(String a) {
@@ -80,6 +96,11 @@ public class Magazzino {
 			return false;
 		Magazzino other = (Magazzino) obj;
 		return Objects.equals(magazzino, other.magazzino);
+	}
+
+	public void inserisci(Scaffale scaffale, Articolo a) {
+		inserisciArticoloScaffale(scaffale.getReparto(), scaffale.getNumero(), a);
+		
 	}
 
 

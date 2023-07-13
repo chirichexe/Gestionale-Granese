@@ -1,6 +1,8 @@
 package inventario.model;
 
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +13,7 @@ import inventario.persistence.*;
 public class MyMain {
 
 	public static void main(String[] args) throws IOException, BadFileFormatException {
-		Reparto r = new Reparto('A');
+		Reparto r = new Reparto("PianoSotto");
 		r.inserisci(1, new Articolo("CHRDVD", "CIAO"));
 		r.inserisci(1, new Articolo("CHRCH"));
 		r.inserisci(1, new Articolo("TEST"));
@@ -29,7 +31,7 @@ public class MyMain {
 		r.inserisci(20, new Articolo("uf"));
 		r.inserisci(8, new Articolo("aa"));
 		
-		Reparto s = new Reparto('B');
+		Reparto s = new Reparto("PianoSopra");
 		s.inserisci(1, new Articolo("wve", "CIAO"));
 		s.inserisci(1, new Articolo("CHRCHw"));
 		s.inserisci(1, new Articolo("TESTw"));
@@ -44,7 +46,17 @@ public class MyMain {
 		Magazzino m = new Magazzino();
 		m.aggiungiReparto(r);
 		m.aggiungiReparto(s);
-		System.out.println(m.trovaArticolo("uf"));
+		
+		m.aggiungiReparto("test");
+		m.inserisciArticoloScaffale("test", 5, new Articolo("Articolo31", "vjs"));
+		m.inserisciArticoloScaffale("test", 3, new Articolo("Articolo32", "vjs"));
+		
+		//prova reader
+		
+		Reader rdr = new FileReader("magazzino.txt");
+		MagazzinoGraneseReader reader = new MagazzinoGraneseReader();
+		Magazzino m1 = reader.leggiMagazzino(rdr);
+		System.out.println((m1.toString()));
 	}
 
 }

@@ -2,6 +2,7 @@ package inventario.controller;
 
 import inventario.model.Articolo;
 import inventario.model.Magazzino;
+import inventario.model.Scaffale;
 
 public class ControllerGranese implements Controller{
 	Magazzino magazzino;
@@ -14,7 +15,7 @@ public class ControllerGranese implements Controller{
 		return magazzino;
 	}
 	@Override
-	public void aggiungiArticolo(Integer scaffale, Articolo a) {
+	public void aggiungiArticolo(Scaffale scaffale, Articolo a) {
 		magazzino.inserisci(scaffale, a);
 	}
 	@Override

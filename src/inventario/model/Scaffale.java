@@ -4,15 +4,15 @@ import java.util.Objects;
 
 public class Scaffale implements Comparable<Scaffale>{
 	private int numero;
-	private char reparto;
+	private String reparto;
 	
-	public Scaffale(int numero, char reparto) {
+	public Scaffale(int numero, String reparto) {
 		if (numero==0 || numero<0 ) throw new IllegalArgumentException("Gli scaffali sono numeri maggiori o uguali di 1");
 		this.numero = numero;
 		this.reparto = reparto;
 	}
 	
-	public static Scaffale of(int numero, char reparto) {
+	public static Scaffale of(int numero, String reparto) {
 		return new Scaffale(numero, reparto);
 	}
 
@@ -20,7 +20,7 @@ public class Scaffale implements Comparable<Scaffale>{
 		return numero;
 	}
 
-	public char getReparto() {
+	public String getReparto() {
 		return reparto;
 	}
 

@@ -11,19 +11,19 @@ import java.util.stream.Collectors;
 
 public class Reparto {
 	private Map<Scaffale, List<Articolo>> reparto;
-	private char id;
+	private String id;
 	
-	public Reparto(char id) {
+	public Reparto(String id) {
 		reparto = new TreeMap<>();
 		this.id = id;
 	}
 	
-	public Reparto(Map<Scaffale, List<Articolo>> reparto, char id) {
+	public Reparto(Map<Scaffale, List<Articolo>> reparto, String id) {
 		this.id = id;
 		this.reparto = reparto;
 	}
 	
-	public int getID() {
+	public String getID() {
 		return id;
 	}
 	
@@ -76,7 +76,7 @@ public class Reparto {
 		sb.append("Reparto " + id);
 		for(Scaffale s: reparto.keySet()) {
 			sb.append("\n- Scaffale "+ s.getNumero() + "\n	" + 
-			getScaffale( s.getNumero() ).stream().map(i->i.toString()).collect(Collectors.joining("\n	") ) );
+					getArticoliScaffale(s).stream().map(i->i.toString()).collect(Collectors.joining("\n	") ) );
 		}
 		return sb.toString();
 	}
