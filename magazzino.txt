@@ -5,5 +5,3 @@ scaffale 1, Piano sopra: 8007/CS, STN
 scaffale 1, Piano sopra: 8007/NS,STN
 scaffale 1, Piano sopra: 8007/B,STN ; 8008/NS,STN; 8008/NB, STN
 scaffale 1, Piano sopra: 8008/M,STN
-
-

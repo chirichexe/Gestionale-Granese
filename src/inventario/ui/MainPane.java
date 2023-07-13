@@ -26,6 +26,7 @@ import javafx.scene.layout.VBox;
 
 public class MainPane extends BorderPane{
 	private Controller controller;
+	private VBox gestioneScaffali;
 	private TextArea magazzinoTextArea;
 	private TextArea scaffaliTextArea;
 	private TextField articoloDaCercare;
@@ -37,6 +38,7 @@ public class MainPane extends BorderPane{
 	private Button aggiungi;
 	private ComboBox<String> repartiBox;
 	private ComboBox<String> repartiBox2;
+	private ComboBox<Scaffale> scaffaliBox;
 	
 	public MainPane(Controller controller) {
 		this.controller = controller;
@@ -54,7 +56,7 @@ public class MainPane extends BorderPane{
 			gestioneSinistra1.setSpacing(20);
 			//gestione sinistra 1
 			VBox gestioneMagazzino = new VBox();
-			VBox gestioneScaffali = new VBox();
+			gestioneScaffali = new VBox();
 			{
 				magazzinoTextArea = new TextArea();
 				magazzinoTextArea.setText(controller.stampaMagazzino());
@@ -63,6 +65,8 @@ public class MainPane extends BorderPane{
 				scaffaliTextArea.setPrefSize(250, 120);
 				repartiBox = new ComboBox<>(FXCollections.observableArrayList(reparti));
 				repartiBox.setOnAction(this::handleScaffale);
+				
+				scaffaliBox = new ComboBox<>();
 				gestioneScaffali.getChildren().addAll(new Label("Ottieni il reparto "), repartiBox);
 				gestioneScaffali.getChildren().add(scaffaliTextArea);
 			}
@@ -100,6 +104,17 @@ public class MainPane extends BorderPane{
 	
 	private void handleScaffale(ActionEvent e) {
 		scaffaliTextArea.setText(controller.getMagazzino().getReparto(repartiBox.getValue()).get().toString());
+		gestioneScaffali.getChildren().remove(scaffaliBox);
+		scaffaliBox = new ComboBox<>(FXCollections.observableArrayList(controller.getMagazzino().getReparto(repartiBox.getValue()).get().getScaffali()));
+		scaffaliBox.setOnAction(this::sceltaScaffale);
+		gestioneScaffali.getChildren().add(scaffaliBox);
+	}
+	
+	private void sceltaScaffale(ActionEvent e) {
+		scaffaliTextArea.setText(scaffaliBox.getValue().toString()+"\n\n");
+	controller.getMagazzino().getReparto(repartiBox.getValue()).get().
+				getArticoliScaffale(scaffaliBox.getValue())
+				.forEach(i->scaffaliTextArea.appendText(i.toString().concat("\n")));
 	}
 	
 	private void handleAggiungi(ActionEvent e) {
@@ -113,14 +128,16 @@ public class MainPane extends BorderPane{
 				new Articolo(nomeNuovo.getText(), marcaNuova.getText()) : 
 					new Articolo(nomeNuovo.getText());
 		if (controller.aggiungiArticolo(Scaffale.of(sc, repartiBox2.getValue()), daAggiungere) == false) InventarioGraneseApp.alertError("Errore", "Errore aggiunta articolo","Articolo non valido o già presente");
-		magazzinoTextArea.setText(controller.stampaMagazzino());
-		
-		try {
-			controller.scriviSuFile("\nscaffale "+ scaffale.getText() + ","+ repartiBox2.getValue() + ": " + nomeNuovo.getText().toUpperCase());
-			System.out.println("Scrittura avvenuta con successo!");
-		} catch (Exception e1) {
-			InventarioGraneseApp.alertError("", "", "ok");
-			e1.printStackTrace();
+		else {
+			magazzinoTextArea.setText(controller.stampaMagazzino());
+			
+			try {
+				controller.scriviSuFile("\nscaffale "+ scaffale.getText() + ","+ repartiBox2.getValue() + ": " + nomeNuovo.getText().toUpperCase() + "," + marcaNuova.getText().toUpperCase());
+				System.out.println("Scrittura avvenuta con successo!");
+			} catch (Exception e1) {
+				InventarioGraneseApp.alertError("", "", "ok");
+				e1.printStackTrace();
+			}
 		}
 	}
 	
