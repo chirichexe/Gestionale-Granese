@@ -114,14 +114,14 @@ public class MainPane extends BorderPane{
 					new Articolo(nomeNuovo.getText());
 		if (controller.aggiungiArticolo(Scaffale.of(sc, repartiBox2.getValue()), daAggiungere) == false) InventarioGraneseApp.alertError("Errore", "Errore aggiunta articolo","Articolo non valido o già presente");
 		magazzinoTextArea.setText(controller.stampaMagazzino());
-		/*
+		
 		try {
-			controller.scriviSuFile("scaffale "+ scaffale.getText() + ","+ repartiBox2.getValue() + ": " + nomeNuovo.getText().toUpperCase() +"\n");
+			controller.scriviSuFile("\nscaffale "+ scaffale.getText() + ","+ repartiBox2.getValue() + ": " + nomeNuovo.getText().toUpperCase());
 			System.out.println("Scrittura avvenuta con successo!");
 		} catch (Exception e1) {
 			InventarioGraneseApp.alertError("", "", "ok");
 			e1.printStackTrace();
-		}*/
+		}
 	}
 	
 	private void cercaEl(ActionEvent e) {

@@ -1,5 +1,8 @@
 package inventario.controller;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 
 import inventario.model.Articolo;
@@ -27,8 +30,30 @@ public class ControllerGranese implements Controller{
 	}
 	@Override
 	public void scriviSuFile(String s) {
-		// TODO Auto-generated method stub
+		appendToFile("magazzino.txt", s);
 		
+	}
+	
+	private void appendToFile(String filePath, String text)
+	{
+	    PrintWriter fileWriter = null;
+
+	    try
+	    {
+	        fileWriter = new PrintWriter(new BufferedWriter(new FileWriter(
+	                filePath, true)));
+
+	        fileWriter.println(text);
+	    } catch (IOException ioException)
+	    {
+	        ioException.printStackTrace();
+	    } finally
+	    {
+	        if (fileWriter != null)
+	        {
+	            fileWriter.close();
+	        }
+	    }
 	}
 	
 }
