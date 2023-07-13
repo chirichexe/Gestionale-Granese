@@ -1,7 +1,10 @@
 package inventario.model;
 
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -53,10 +56,10 @@ public class MyMain {
 		
 		//prova reader
 		
-		Reader rdr = new FileReader("magazzino.txt");
-		MagazzinoGraneseReader reader = new MagazzinoGraneseReader();
-		Magazzino m1 = reader.leggiMagazzino(rdr);
-		System.out.println((m1.toString()));
+		FileWriter w = new FileWriter("magazzino.txt");
+		w.append("ciao\n");
+		w.append("casc");
+		w.close();
 	}
 
 }

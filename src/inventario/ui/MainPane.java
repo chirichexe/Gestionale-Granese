@@ -1,5 +1,10 @@
 package inventario.ui;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -24,7 +29,11 @@ public class MainPane extends BorderPane{
 	private TextField articoloDaCercare;
 	private TextField siTrova;
 	private Button cerca;
-	private ComboBox<Reparto> repartiBox;
+	private TextField nomeNuovo;
+	private TextField scaffale;
+	private Button aggiungi;
+	private ComboBox<String> repartiBox;
+	private ComboBox<String> repartiBox2;
 	
 	public MainPane(Controller controller) {
 		this.controller = controller;
@@ -32,6 +41,8 @@ public class MainPane extends BorderPane{
 	}
 	
 	private void init() {
+		List<String> reparti = controller.getMagazzino().get().stream().map(i->i.getID()).collect(Collectors.toList());
+		
 		VBox destra = new VBox();
 		VBox sinistra = new VBox();{
 			sinistra.getChildren().add(new Label("Magazzino"));
@@ -47,9 +58,9 @@ public class MainPane extends BorderPane{
 				gestioneMagazzino.getChildren().add(magazzinoTextArea);
 				scaffaliTextArea = new TextArea();
 				scaffaliTextArea.setPrefSize(250, 120);
-				repartiBox = new ComboBox<>(FXCollections.observableArrayList(controller.getMagazzino().get()));
+				repartiBox = new ComboBox<>(FXCollections.observableArrayList(reparti));
 				repartiBox.setOnAction(this::handleScaffale);
-				gestioneScaffali.getChildren().addAll(new Label("Ottieni lo scaffale "), repartiBox);
+				gestioneScaffali.getChildren().addAll(new Label("Ottieni il reparto "), repartiBox);
 				gestioneScaffali.getChildren().add(scaffaliTextArea);
 			}
 			gestioneSinistra1.getChildren().addAll(gestioneMagazzino, gestioneScaffali);
@@ -66,9 +77,15 @@ public class MainPane extends BorderPane{
 				cerca = new Button("Cerca");
 				cerca.setOnAction(this::cercaEl);
 				trovaArticolo.getChildren().add(cerca);
-				trovaArticolo.getChildren().add(new Label("Situato nello: "));
+				trovaArticolo.getChildren().add(new Label("Situato nel: "));
 				trovaArticolo.getChildren().add(siTrova);
 				aggiungiArticolo.getChildren().add(new Label("Aggiungi articolo"));
+				repartiBox2 = new ComboBox<>(FXCollections.observableArrayList(reparti));
+				nomeNuovo = new TextField();
+				scaffale = new TextField();
+				aggiungi = new Button("Aggiungi");
+				aggiungi.setOnAction(this::handleAggiungi);
+				aggiungiArticolo.getChildren().addAll(nomeNuovo, new Label("Nello scaffale:"),scaffale, new Label("Nel reparto:"), repartiBox2, aggiungi);
 			}
 			gestioneSinistra2.getChildren().addAll(trovaArticolo, aggiungiArticolo);
 			sinistra.getChildren().addAll(gestioneSinistra1, gestioneSinistra2);
@@ -78,11 +95,21 @@ public class MainPane extends BorderPane{
 	}
 	
 	private void handleScaffale(ActionEvent e) {
-		//scaffaliTextArea.setText(controller.getMagazzino().getScaffale(repartiBox.getValue()).stream().map(i->i.toString()).collect(Collectors.joining("\n")));
+		scaffaliTextArea.setText(controller.getMagazzino().getReparto(repartiBox.getValue()).get().toString());
+	}
+	
+	private void handleAggiungi(ActionEvent e) {
+		try {
+			controller.scriviSuFile("scaffale "+ scaffale.getText() + ","+ repartiBox2.getValue() + ": " + nomeNuovo.getText().toUpperCase() +"\n");
+			System.out.println("Scrittura avvenuta con successo!");
+		} catch (Exception e1) {
+			InventarioGraneseApp.alertError("", "", "ok");
+			e1.printStackTrace();
+		}
 	}
 	
 	private void cercaEl(ActionEvent e) {
-		//if(controller.getMagazzino().posizioneArticolo(articoloDaCercare.getText())==0) InventarioGraneseApp.alertError("Errore", "Articolo non trovato", "Controlla bene il magazzino!");
-		//else siTrova.setText("Scaffale " + controller.getMagazzino().posizioneArticolo(articoloDaCercare.getText()));
+		if(controller.getMagazzino().trovaArticolo(articoloDaCercare.getText()).isEmpty()) InventarioGraneseApp.alertError("Errore", "Articolo non trovato", "Controlla bene il magazzino!");
+		else siTrova.setText(controller.getMagazzino().trovaArticolo(articoloDaCercare.getText()).get().toString());
 	}
 }
