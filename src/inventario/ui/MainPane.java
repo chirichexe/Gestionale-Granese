@@ -1,5 +1,6 @@
 package inventario.ui;
 
+import java.awt.Paint;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -20,6 +21,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -73,8 +75,11 @@ public class MainPane extends BorderPane{
 			gestioneSinistra1.getChildren().addAll(gestioneMagazzino, gestioneScaffali);
 			//gestione sinistra 2
 			HBox gestioneSinistra2 = new HBox();
+			gestioneSinistra2.setBorder(Border.stroke(javafx.scene.paint.Paint.valueOf("grey")));
 			VBox trovaArticolo = new VBox();
+			
 			VBox aggiungiArticolo = new VBox();
+			aggiungiArticolo.setSpacing(10);
 			{
 				trovaArticolo.getChildren().add(new Label("Trova Articolo"));
 				articoloDaCercare = new TextField();
@@ -130,7 +135,6 @@ public class MainPane extends BorderPane{
 		if (controller.aggiungiArticolo(Scaffale.of(sc, repartiBox2.getValue()), daAggiungere) == false) InventarioGraneseApp.alertError("Errore", "Errore aggiunta articolo","Articolo non valido o già presente");
 		else {
 			magazzinoTextArea.setText(controller.stampaMagazzino());
-			
 			try {
 				controller.scriviSuFile("\nscaffale "+ scaffale.getText() + ","+ repartiBox2.getValue() + ": " + nomeNuovo.getText().toUpperCase() + "," + marcaNuova.getText().toUpperCase());
 				System.out.println("Scrittura avvenuta con successo!");
