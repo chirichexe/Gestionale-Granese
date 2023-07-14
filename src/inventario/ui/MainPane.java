@@ -50,14 +50,14 @@ public class MainPane extends BorderPane{
 	private void init() {
 		List<String> reparti = controller.getMagazzino().get().stream().map(i->i.getID()).collect(Collectors.toList());
 		
-		VBox destra = new VBox();
-		VBox sinistra = new VBox();{
+		VBox destra = new VBox(2);
+		VBox sinistra = new VBox(2);{
 			sinistra.getChildren().add(new Label("Magazzino"));
 			sinistra.setSpacing(10);
-			HBox gestioneSinistra1 = new HBox();
+			HBox gestioneSinistra1 = new HBox(2);
 			gestioneSinistra1.setSpacing(20);
 			//gestione sinistra 1
-			VBox gestioneMagazzino = new VBox();
+			VBox gestioneMagazzino = new VBox(2);
 			gestioneScaffali = new VBox();
 			{
 				magazzinoTextArea = new TextArea();
@@ -74,11 +74,11 @@ public class MainPane extends BorderPane{
 			}
 			gestioneSinistra1.getChildren().addAll(gestioneMagazzino, gestioneScaffali);
 			//gestione sinistra 2
-			HBox gestioneSinistra2 = new HBox();
+			HBox gestioneSinistra2 = new HBox(2);
 			gestioneSinistra2.setBorder(Border.stroke(javafx.scene.paint.Paint.valueOf("grey")));
-			VBox trovaArticolo = new VBox();
+			VBox trovaArticolo = new VBox(2);
 			
-			VBox aggiungiArticolo = new VBox();
+			VBox aggiungiArticolo = new VBox(2);
 			aggiungiArticolo.setSpacing(10);
 			{
 				trovaArticolo.getChildren().add(new Label("Trova Articolo"));
