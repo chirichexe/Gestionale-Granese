@@ -8,6 +8,7 @@ import inventario.model.Articolo;
 import inventario.model.Scaffale;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -46,6 +47,8 @@ public class SezioneSinistra extends VBox {
 	private void init() {
 		//PRECONFIGURAZIONE
 		this.setSpacing(10);
+		this.setPadding(new Insets(10, 10, 0, 10));
+		this.setBorder(Border.stroke(javafx.scene.paint.Paint.valueOf("Lightgrey")));
 		List<String> reparti = controller.getMagazzino().get().stream().map(i->i.getID()).collect(Collectors.toList());
 		//TESTO IN ALTO
 		topLabel = new Label("Magazzino");
@@ -58,6 +61,7 @@ public class SezioneSinistra extends VBox {
 			gestioneMagazzino = new VBox(10);
 			{
 			magazzinoTextArea = new TextArea();
+			magazzinoTextArea.setPrefSize(250, 300);
 			magazzinoTextArea.setText(controller.stampaMagazzino());
 			gestioneMagazzino.getChildren().add(magazzinoTextArea);
 			}
@@ -65,7 +69,7 @@ public class SezioneSinistra extends VBox {
 			gestioneScaffali = new VBox(10);
 			{
 			scaffaliTextArea = new TextArea();
-			scaffaliTextArea.setPrefSize(250, 120);
+			scaffaliTextArea.setPrefWidth(250);
 			repartiBox = new ComboBox<>(FXCollections.observableArrayList(reparti));
 			repartiBox.setOnAction(this::handleScaffale);
 			scaffaliBox = new ComboBox<>();
@@ -79,13 +83,12 @@ public class SezioneSinistra extends VBox {
 			//1) trova articolo
 			VBox trovaArticolo = new VBox(5);
 			{
-			trovaArticolo.getChildren().add(new Label("Trova Articolo"));
-			articoloDaCercare = new TextField();
-			siTrova = new TextField();
-			siTrova.setEditable(false);
-			cerca = new Button("Cerca");
-			cerca.setOnAction(this::cercaEl);
-			trovaArticolo.getChildren().addAll(articoloDaCercare, cerca, new Label("Situato nel: "), siTrova, new Label("Aggiungi articolo"));
+				articoloDaCercare = new TextField();
+				siTrova = new TextField();
+				siTrova.setEditable(false);
+				cerca = new Button("Cerca");
+				cerca.setOnAction(this::cercaEl);
+				trovaArticolo.getChildren().addAll(new Label("Trova Articolo"),articoloDaCercare, cerca, new Label("Situato nel: "), siTrova);
 			}
 			//2) aggiungi articolo
 			VBox aggiungiArticolo = new VBox();
@@ -96,7 +99,7 @@ public class SezioneSinistra extends VBox {
 				scaffale = new TextField();
 				aggiungi = new Button("Aggiungi");
 				aggiungi.setOnAction(this::handleAggiungi);
-				aggiungiArticolo.getChildren().addAll(nomeNuovo, marcaNuova, new Label("Nello scaffale:"),scaffale, new Label("Nel reparto:"), repartiBox2, aggiungi);
+				aggiungiArticolo.getChildren().addAll(new Label("Aggiungi articolo"),nomeNuovo, marcaNuova, new Label("Nello scaffale:"),scaffale, new Label("Nel reparto:"), repartiBox2, aggiungi);
 			}
 		gestioneSinistra2.getChildren().addAll(trovaArticolo, aggiungiArticolo);
 		

@@ -46,29 +46,17 @@ public class InventarioGraneseApp extends Application {
 	public void start(Stage stage) throws Exception { 
 		stage.setTitle("Magazzino Granese");
 		try {
-				MagazzinoGraneseReader reader = new MagazzinoGraneseReader();
-				Magazzino magazzino = reader.leggiMagazzino(new FileReader("magazzino.txt"));
-				Controller controller = new ControllerGranese(magazzino);
-				
-				MainPane mainPanel = new MainPane(controller, stage);
-				Scene scene = new Scene(mainPanel, 1000, 700, Color.WHITE);
-				
-				stage.setTitle("Esempio 24 ter");
-				FlowPane panel = new FlowPane();
-				Button button = new Button("Scelta file");
-				button.setOnAction( event -> {
-				chooser = new FileChooser();
-				chooser.setTitle("Apri file");
-				selectedFile = chooser.showOpenDialog(stage); // OPPURE showSaveDialog
-				txt1.setText("File name: " + selectedFile.getName());
-				txt2.setText("Percorso: " + selectedFile.getPath());
-				}
-				);
-				chooser = new FileChooser();
-				chooser.setTitle("Apri file");
-				
-				stage.setScene(scene);
-				stage.show();
+			//1. LETTURA MAGAZZINO DA FILE TESTO
+			MagazzinoGraneseReader reader = new MagazzinoGraneseReader();
+			Magazzino magazzino = reader.leggiMagazzino(new FileReader("magazzino.txt"));
+			Controller controller = new ControllerGranese(magazzino);
+			//2. LETTURA MAGAZZINO DA FILE EXCEL
+			
+			//IMPOSTAZIONE SCENA
+			MainPane mainPanel = new MainPane(controller, stage);
+			Scene scene = new Scene(mainPanel, 1000, 700, Color.WHITE);
+			stage.setScene(scene);
+			stage.show();
 				
 		} catch (IOException e) {
 			alertError(
