@@ -2,6 +2,7 @@ package inventario.ui;
 
 import java.awt.Paint;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -25,8 +26,12 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 public class MainPane extends BorderPane{
+	
+	private Stage stage;
+	
 	private Controller controller;
 	private VBox gestioneScaffali;
 	private TextArea magazzinoTextArea;
@@ -42,121 +47,24 @@ public class MainPane extends BorderPane{
 	private ComboBox<String> repartiBox2;
 	private ComboBox<Scaffale> scaffaliBox;
 	
-	public MainPane(Controller controller) {
+	private Button scegliFile;
+	private FileChooser chooser;
+	private File selectedFile;
+	private TextField txt1, txt2;
+	
+	public MainPane(Controller controller, Stage stage) {
 		this.controller = controller;
+		this.stage = stage;
 		init();
 	}
 	
 	private void init() {
 		List<String> reparti = controller.getMagazzino().get().stream().map(i->i.getID()).collect(Collectors.toList());
 		
-		VBox destra = new VBox(2);
-		VBox sinistra = new VBox(2);{
-			sinistra.getChildren().add(new Label("Magazzino"));
-			sinistra.setSpacing(10);
-			HBox gestioneSinistra1 = new HBox(2);
-			gestioneSinistra1.setSpacing(20);
-			//gestione sinistra 1
-			VBox gestioneMagazzino = new VBox(2);
-			gestioneScaffali = new VBox();
-			{
-				magazzinoTextArea = new TextArea();
-				magazzinoTextArea.setText(controller.stampaMagazzino());
-				gestioneMagazzino.getChildren().add(magazzinoTextArea);
-				scaffaliTextArea = new TextArea();
-				scaffaliTextArea.setPrefSize(250, 120);
-				repartiBox = new ComboBox<>(FXCollections.observableArrayList(reparti));
-				repartiBox.setOnAction(this::handleScaffale);
-				
-				scaffaliBox = new ComboBox<>();
-				gestioneScaffali.getChildren().addAll(new Label("Ottieni il reparto "), repartiBox);
-				gestioneScaffali.getChildren().add(scaffaliTextArea);
-			}
-			gestioneSinistra1.getChildren().addAll(gestioneMagazzino, gestioneScaffali);
-			//gestione sinistra 2
-			HBox gestioneSinistra2 = new HBox(2);
-			gestioneSinistra2.setBorder(Border.stroke(javafx.scene.paint.Paint.valueOf("grey")));
-			VBox trovaArticolo = new VBox(2);
-			
-			VBox aggiungiArticolo = new VBox(2);
-			
-			aggiungiArticolo.setSpacing(10);
-			{
-				trovaArticolo.getChildren().add(new Label("Trova Articolo"));
-				articoloDaCercare = new TextField();
-				siTrova = new TextField();
-				siTrova.setEditable(false);
-				trovaArticolo.getChildren().add(articoloDaCercare);
-				cerca = new Button("Cerca");
-				cerca.setOnAction(this::cercaEl);
-				trovaArticolo.getChildren().add(cerca);
-				trovaArticolo.getChildren().add(new Label("Situato nel: "));
-				trovaArticolo.getChildren().add(siTrova);
-				aggiungiArticolo.getChildren().add(new Label("Aggiungi articolo"));
-				repartiBox2 = new ComboBox<>(FXCollections.observableArrayList(reparti));
-				nomeNuovo = new TextField();
-				marcaNuova = new TextField();
-				scaffale = new TextField();
-				aggiungi = new Button("Aggiungi");
-				aggiungi.setOnAction(this::handleAggiungi);
-				aggiungiArticolo.getChildren().addAll(nomeNuovo, marcaNuova, new Label("Nello scaffale:"),scaffale, new Label("Nel reparto:"), repartiBox2, aggiungi);
-				//EEE
-				Button chooserButton = new Button("Scegli file");
-				chooserButton.setOnAction(this::fileSelection);
-				aggiungiArticolo.getChildren().add(chooserButton);
-			}
-			gestioneSinistra2.getChildren().addAll(trovaArticolo, aggiungiArticolo);
-			sinistra.getChildren().addAll(gestioneSinistra1, gestioneSinistra2);
-		}
-		this.setLeft(sinistra);
-		this.setRight(destra);
+		
+		this.setRight(new SezioneDestra(controller));
+		this.setLeft(new SezioneSinistra(controller));
 	}
 	
-	private void fileSelection(ActionEvent e) {
-		FileChooser f = new FileChooser();
-		f.showOpenDialog()?
-	}
-	
-	private void handleScaffale(ActionEvent e) {
-		scaffaliTextArea.setText(controller.getMagazzino().getReparto(repartiBox.getValue()).get().toString());
-		gestioneScaffali.getChildren().remove(scaffaliBox);
-		scaffaliBox = new ComboBox<>(FXCollections.observableArrayList(controller.getMagazzino().getReparto(repartiBox.getValue()).get().getScaffali()));
-		scaffaliBox.setOnAction(this::sceltaScaffale);
-		gestioneScaffali.getChildren().add(scaffaliBox);
-	}
-	
-	private void sceltaScaffale(ActionEvent e) {
-		scaffaliTextArea.setText(scaffaliBox.getValue().toString()+"\n\n");
-	controller.getMagazzino().getReparto(repartiBox.getValue()).get().
-				getArticoliScaffale(scaffaliBox.getValue())
-				.forEach(i->scaffaliTextArea.appendText(i.toString().concat("\n")));
-	}
-	
-	private void handleAggiungi(ActionEvent e) {
-		int sc = 0;
-		try {
-			sc = Integer.parseInt(scaffale.getText().trim());
-		}catch (Exception ex) {
-			InventarioGraneseApp.alertError("Errore", "Numero scaffale non valido!", ex.getMessage().toString());
-		}
-		Articolo daAggiungere = !marcaNuova.getText().isBlank()? 
-				new Articolo(nomeNuovo.getText(), marcaNuova.getText()) : 
-					new Articolo(nomeNuovo.getText());
-		if (controller.aggiungiArticolo(Scaffale.of(sc, repartiBox2.getValue()), daAggiungere) == false) InventarioGraneseApp.alertError("Errore", "Errore aggiunta articolo","Articolo non valido o già presente");
-		else {
-			magazzinoTextArea.setText(controller.stampaMagazzino());
-			try {
-				controller.scriviSuFile("\nscaffale "+ scaffale.getText() + ","+ repartiBox2.getValue() + ": " + nomeNuovo.getText().toUpperCase() + "," + marcaNuova.getText().toUpperCase());
-				System.out.println("Scrittura avvenuta con successo!");
-			} catch (Exception e1) {
-				InventarioGraneseApp.alertError("", "", "ok");
-				e1.printStackTrace();
-			}
-		}
-	}
-	
-	private void cercaEl(ActionEvent e) {
-		if(controller.getMagazzino().trovaArticolo(articoloDaCercare.getText()).isEmpty()) InventarioGraneseApp.alertError("Errore", "Articolo non trovato", "Controlla bene il magazzino!");
-		else siTrova.setText(controller.getMagazzino().trovaArticolo(articoloDaCercare.getText()).get().toString());
-	}
+
 }

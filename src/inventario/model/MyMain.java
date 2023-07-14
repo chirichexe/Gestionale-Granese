@@ -15,7 +15,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class MyMain {
 
 	public static void main(String[] args) throws IOException{
-		File file =new File("C:\\Users\\david\\OneDrive\\Documenti\\GitHub\\Gestionali\\elettrix_ILUCCHI001C.xlsx");
+		File file =new File("C:\\Users\\utente\\Documents\\GitHub\\Gestionali\\elettrix_ILUCCHI001C.xlsx");
 		FileInputStream fis = new FileInputStream(file);
 		XSSFWorkbook workbook = new XSSFWorkbook(fis);
 		XSSFSheet sheet = workbook.getSheetAt(0); //inizia da 0
