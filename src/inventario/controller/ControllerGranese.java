@@ -4,8 +4,10 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import inventario.model.Articolo;
+import inventario.model.ArticoloOrdinato;
 import inventario.model.Magazzino;
 import inventario.model.Ordine;
 import inventario.model.Scaffale;
@@ -31,17 +33,27 @@ public class ControllerGranese implements Controller{
 	
 	@Override
 	public Ordine getOrdine() {
-		// TODO Auto-generated method stub
 		return ordine;
 	}
 	@Override
 	public boolean aggiungiArticolo(Scaffale scaffale, Articolo a) {
 		return magazzino.inserisci(scaffale, a);
 	}
+	
+	public void riempiOrdine(List<ArticoloOrdinato> ordineAttuale) {
+		ordine.riempi(ordineAttuale); //da cambiare in boolean, qualcosa potrebbe andare storto
+	}
+	
 	@Override
 	public String stampaMagazzino() {
 		return magazzino.toString();
 	}
+	
+	@Override
+	public String stampaOrdine() {
+		return ordine.toString();
+	}
+	
 	@Override
 	public void scriviSuFile(String s) {
 		appendToFile("magazzino.txt", s);

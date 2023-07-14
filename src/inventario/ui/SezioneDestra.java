@@ -9,6 +9,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -22,6 +23,12 @@ public class SezioneDestra  extends VBox {
 	private Button scegliFile;
 	private TextArea ordineTextArea;
 	private TextArea marcaTextArea;
+	private TextField codiceField;
+	private TextField quantita;
+	private Button trovaButton;
+	private TextArea esito;
+	private TextArea resocontoArea;
+	private Button stampaSuFile;
 	
 	public SezioneDestra(Controller controller) {
 		this.controller = controller;
@@ -59,14 +66,30 @@ public class SezioneDestra  extends VBox {
 		gestioneDestra1.getChildren().addAll(sceltaFile, filtraOrdine);
 		//RICERCA ORDINI
 		HBox gestioneDestra2 = new HBox(20);
-		{
-			
-		}
+			//CERCA ARTICOLO
+			VBox ricercaArticolo = new VBox(5);
+			{
+			codiceField = new TextField();
+			quantita = new TextField();
+			trovaButton = new Button("Cerca Articolo nell'ordine");
+			esito = new TextArea();
+			esito.setPrefSize(200, 100);
+			ricercaArticolo.getChildren().addAll(codiceField, quantita, trovaButton, esito);
+			}
+			//SCRITTURA RESOCONTO
+			VBox resoconto = new VBox(5);
+			{
+			resocontoArea = new TextArea();
+			resocontoArea.setPrefWidth(200);
+			stampaSuFile = new Button("Stampa resoconto");
+			resoconto.getChildren().addAll(resocontoArea, stampaSuFile);
+			}
+		gestioneDestra2.getChildren().addAll(ricercaArticolo, resoconto);
 		
 		this.getChildren().addAll(gestioneDestra1, gestioneDestra2);
 	}
 	
 	private void caricaOrdine(ActionEvent e) {
-		ordineTextArea.setText(controller.getOrdine().toString());
+		ordineTextArea.setText(controller.stampaOrdine());
 	}
 }

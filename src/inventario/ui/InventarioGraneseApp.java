@@ -1,14 +1,19 @@
 package inventario.ui;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import inventario.controller.Controller;
 import inventario.controller.ControllerGranese;
 import inventario.model.Magazzino;
 import inventario.persistence.BadFileFormatException;
 import inventario.persistence.MagazzinoGraneseReader;
+import inventario.persistence.OrdineGraneseReader;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -47,11 +52,16 @@ public class InventarioGraneseApp extends Application {
 		stage.setTitle("Magazzino Granese");
 		try {
 			//1. LETTURA MAGAZZINO DA FILE TESTO
+			
 			MagazzinoGraneseReader reader = new MagazzinoGraneseReader();
 			Magazzino magazzino = reader.leggiMagazzino(new FileReader("magazzino.txt"));
 			Controller controller = new ControllerGranese(magazzino);
 			//2. LETTURA MAGAZZINO DA FILE EXCEL
+			OrdineGraneseReader readerOrdine = new OrdineGraneseReader();
+	
+	File file =new File("C:\\Users\\utente\\Documents\\GitHub\\Gestionali\\elettrix_ILUCCHI001C.xlsx"); //DA FAR INTERAGIRE CON FILEPICKER
 			
+			controller.riempiOrdine(readerOrdine.leggiOrdine(file));
 			//IMPOSTAZIONE SCENA
 			MainPane mainPanel = new MainPane(controller, stage);
 			Scene scene = new Scene(mainPanel, 1000, 700, Color.WHITE);

@@ -15,7 +15,9 @@ public class Ordine {
 	}
 	
 	public void riempi(List<ArticoloOrdinato> lista) {
-		ordineDelGiorno.addAll(lista);
+		for(ArticoloOrdinato art: lista) {
+			aggiungi(art);
+		}
 	}
 	
 	public List<ArticoloOrdinato> get(){
@@ -23,12 +25,31 @@ public class Ordine {
 	}
 	
 	public void aggiungi(ArticoloOrdinato a) {
-		if (!ordineDelGiorno.contains(a)) {
+		if (!presente(a)) {
 			ordineDelGiorno.add(a);
 		} else {
-			ordineDelGiorno.get(ordineDelGiorno.indexOf(a)).aggiungiElementi(a.getQuantità());
+			System.out.println(a.toString());
+			ordineDelGiorno.get(indice(a)).aggiungiElementi(a.getQuantità());
+
 		}
 	}
+	
+	private boolean presente(ArticoloOrdinato a) {
+		for(ArticoloOrdinato articolo: get()) {
+			if (articolo.getCodice().equalsIgnoreCase(a.getCodice())) return true;
+		}
+		return false;
+	}
+	
+	private int indice(ArticoloOrdinato a) {
+		int i = 0;
+		for(ArticoloOrdinato articolo: get()) {
+			if (articolo.getCodice().equalsIgnoreCase(a.getCodice())) return i;
+			i++;
+		}
+		return -1;
+	}
+
 	
 	public void rimuovi(ArticoloOrdinato a) {
 		ordineDelGiorno.remove(a);
@@ -38,7 +59,7 @@ public class Ordine {
 		return ordineDelGiorno.stream().map(i->i.getCodice().equalsIgnoreCase(articolo)).count()>0;
 	}
 	
-	public boolean contains(Articolo articolo) {
+	public boolean contains(ArticoloOrdinato articolo) {
 		return ordineDelGiorno.contains(articolo);
 	}
 
