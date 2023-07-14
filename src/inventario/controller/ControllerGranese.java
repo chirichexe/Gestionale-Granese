@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.Optional;
 
 import inventario.model.Articolo;
 import inventario.model.ArticoloOrdinato;
@@ -57,6 +58,10 @@ public class ControllerGranese implements Controller{
 	@Override
 	public void scriviSuFile(String s) {
 		appendToFile("magazzino.txt", s);
+	}
+	
+	public Optional<Scaffale> posizioneArticoloMagazzino(ArticoloOrdinato a) {
+		return magazzino.trovaArticolo(a.getCodice());
 	}
 	
 	private void appendToFile(String filePath, String text)

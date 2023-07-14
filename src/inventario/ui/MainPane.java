@@ -1,6 +1,7 @@
 package inventario.ui;
 
 import inventario.controller.Controller;
+import inventario.controller.ControllerGranese;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
@@ -8,9 +9,9 @@ public class MainPane extends BorderPane{
 	
 	private Stage stage;
 	
-	private Controller controller;
+	private ControllerGranese controller;
 	
-	public MainPane(Controller controller, Stage stage) {
+	public MainPane(ControllerGranese controller, Stage stage) {
 		this.controller = controller;
 		this.stage = stage;
 		init();

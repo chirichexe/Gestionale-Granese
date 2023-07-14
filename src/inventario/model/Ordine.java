@@ -6,6 +6,7 @@ import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 public class Ordine {
 	private List<ArticoloOrdinato> ordineDelGiorno;
@@ -34,14 +35,21 @@ public class Ordine {
 		}
 	}
 	
-	private boolean presente(ArticoloOrdinato a) {
+	public boolean presente(ArticoloOrdinato a) {
 		for(ArticoloOrdinato articolo: get()) {
 			if (articolo.getCodice().equalsIgnoreCase(a.getCodice())) return true;
 		}
 		return false;
 	}
 	
-	private int indice(ArticoloOrdinato a) {
+	public Optional<ArticoloOrdinato> getDaCodice(String codice) {
+		for(ArticoloOrdinato articolo: get()) {
+			if (articolo.getCodice().equalsIgnoreCase(codice)) return Optional.of(articolo);
+		}
+		return Optional.empty();
+	}
+	
+	public int indice(ArticoloOrdinato a) {
 		int i = 0;
 		for(ArticoloOrdinato articolo: get()) {
 			if (articolo.getCodice().equalsIgnoreCase(a.getCodice())) return i;
@@ -55,13 +63,6 @@ public class Ordine {
 		ordineDelGiorno.remove(a);
 	}
 	
-	public boolean contains(String articolo) {
-		return ordineDelGiorno.stream().map(i->i.getCodice().equalsIgnoreCase(articolo)).count()>0;
-	}
-	
-	public boolean contains(ArticoloOrdinato articolo) {
-		return ordineDelGiorno.contains(articolo);
-	}
 
 	@Override
 	public String toString() {

@@ -19,10 +19,6 @@ public class ArticoloOrdinato extends Articolo{
 		this.quantita = quantita + daAggiungere;
 	}
 	
-	public Articolo degrada() {
-		return new Articolo(this.getCodice(), this.getSigla());
-	}
-	
 	@Override
 	public String toString() {
 		return "[" + super.getCodice() + " - " + super.getSigla() + ":	" + quantita + "]";

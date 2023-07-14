@@ -1,9 +1,13 @@
 package inventario.ui;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import inventario.controller.Controller;
+import inventario.controller.ControllerGranese;
+import inventario.model.ArticoloOrdinato;
+import inventario.model.Scaffale;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -18,7 +22,7 @@ import javafx.scene.text.FontWeight;
 
 public class SezioneDestra  extends VBox {
 	
-	private Controller controller;
+	private ControllerGranese controller;
 	private Label topLabel;
 	private Button scegliFile;
 	private TextArea ordineTextArea;
@@ -30,7 +34,7 @@ public class SezioneDestra  extends VBox {
 	private TextArea resocontoArea;
 	private Button stampaSuFile;
 	
-	public SezioneDestra(Controller controller) {
+	public SezioneDestra(ControllerGranese controller) {
 		this.controller = controller;
 		init();
 	}
@@ -72,6 +76,7 @@ public class SezioneDestra  extends VBox {
 			codiceField = new TextField();
 			quantita = new TextField();
 			trovaButton = new Button("Cerca Articolo nell'ordine");
+			trovaButton.setOnAction(this::trovaArticoloOrdine);
 			esito = new TextArea();
 			esito.setPrefSize(200, 100);
 			ricercaArticolo.getChildren().addAll(codiceField, quantita, trovaButton, esito);
@@ -82,6 +87,7 @@ public class SezioneDestra  extends VBox {
 			resocontoArea = new TextArea();
 			resocontoArea.setPrefWidth(200);
 			stampaSuFile = new Button("Stampa resoconto");
+		
 			resoconto.getChildren().addAll(resocontoArea, stampaSuFile);
 			}
 		gestioneDestra2.getChildren().addAll(ricercaArticolo, resoconto);
@@ -92,4 +98,36 @@ public class SezioneDestra  extends VBox {
 	private void caricaOrdine(ActionEvent e) {
 		ordineTextArea.setText(controller.stampaOrdine());
 	}
+	
+	private void trovaArticoloOrdine(ActionEvent e){
+		double quantitaCercata = -1;
+		try {
+			quantitaCercata = Double.parseDouble(quantita.getText());
+		}
+		catch(Exception ex ) {
+			InventarioGraneseApp.alertError("Errore", "Errore conversione intero", ex.getMessage());
+		}
+		if (controller.getOrdine().presente(new ArticoloOrdinato(codiceField.getText(), "",	quantitaCercata))) {
+			ArticoloOrdinato cercato = controller.getOrdine().getDaCodice(codiceField.getText()).get();
+			esito.setText("Articolo [" + cercato.getCodice()  + "] Presente\n" + 
+						  "Quantità " + (cercato.getQuantità() == quantitaCercata ? 
+								  "giusta:\nTrovati ": "sbagliata:\nTrovati " ) + quantitaCercata + " su " + cercato.getQuantità() );
+			
+			trovaArticoloNelMagazzino(cercato);
+			ordineTextArea.setText(controller.stampaOrdine());
+			controller.getOrdine().rimuovi(cercato);
+		}else {
+			InventarioGraneseApp.alertError("Attenzione!", "Articolo " + codiceField.getText() +" non trovato!", "Ricontrolla bene o inseriscilo nel resoconto");
+		}
+	}
+	
+	private void trovaArticoloNelMagazzino(ArticoloOrdinato a) {
+		Optional<Scaffale> el = controller.posizioneArticoloMagazzino(a);
+		if(!el.isEmpty()) esito.appendText("\n\nDa inserire nel\n" + el.get().toString());
+		else {
+			InventarioGraneseApp.alertInfo("Attenzione", "L'articolo ordinato non è ancora nel magazzino", "Aggiungilo in uno scaffale");
+			
+		}
+	}
+
 }

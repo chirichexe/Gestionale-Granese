@@ -55,7 +55,7 @@ public class InventarioGraneseApp extends Application {
 			
 			MagazzinoGraneseReader reader = new MagazzinoGraneseReader();
 			Magazzino magazzino = reader.leggiMagazzino(new FileReader("magazzino.txt"));
-			Controller controller = new ControllerGranese(magazzino);
+			ControllerGranese controller = new ControllerGranese(magazzino);
 			//2. LETTURA MAGAZZINO DA FILE EXCEL
 			OrdineGraneseReader readerOrdine = new OrdineGraneseReader();
 	
