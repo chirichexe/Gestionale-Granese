@@ -4,15 +4,19 @@ import java.util.Objects;
 
 public class ArticoloOrdinato extends Articolo{
 	
-	private int quantita;
+	private double quantita;
 	
-	public ArticoloOrdinato(String codice, String sigla, int quantita) {
+	public ArticoloOrdinato(String codice, String sigla, double quantita) {
 		super(codice, sigla);
 		this.quantita = quantita;
 	}
 	
-	public int getQuantità() {
+	public double getQuantità() {
 		return quantita;
+	}
+	
+	public void aggiungiElementi(double daAggiungere) {
+		this.quantita = quantita + daAggiungere;
 	}
 	
 	@Override

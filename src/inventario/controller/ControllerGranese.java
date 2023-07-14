@@ -7,18 +7,32 @@ import java.io.PrintWriter;
 
 import inventario.model.Articolo;
 import inventario.model.Magazzino;
+import inventario.model.Ordine;
 import inventario.model.Scaffale;
 
 public class ControllerGranese implements Controller{
 	private Magazzino magazzino;
+	private Ordine ordine;
 	//private PrintWriter pw;
 	
 	public ControllerGranese(Magazzino m) {
 		this.magazzino = m;
+		ordine = new Ordine();
+	}
+	
+	public ControllerGranese(Magazzino m, Ordine o) {
+		this.magazzino = m;
+		this.ordine = o;
 	}
 	@Override
 	public Magazzino getMagazzino() {
 		return magazzino;
+	}
+	
+	@Override
+	public Ordine getOrdine() {
+		// TODO Auto-generated method stub
+		return ordine;
 	}
 	@Override
 	public boolean aggiungiArticolo(Scaffale scaffale, Articolo a) {
@@ -31,7 +45,6 @@ public class ControllerGranese implements Controller{
 	@Override
 	public void scriviSuFile(String s) {
 		appendToFile("magazzino.txt", s);
-		
 	}
 	
 	private void appendToFile(String filePath, String text)
@@ -55,5 +68,6 @@ public class ControllerGranese implements Controller{
 	        }
 	    }
 	}
+
 	
 }

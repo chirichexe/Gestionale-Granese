@@ -1,21 +1,22 @@
-package inventario.model;
+package inventario.persistence;
 
-import java.io.File;  
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.FormulaEvaluator;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import inventario.model.ArticoloOrdinato;
+import inventario.model.Ordine;
 
+public class OrdineGraneseReader implements OrdineReader {
 
-public class MyMain {
-
-	public static void main(String[] args) throws IOException{
-		File file =new File("C:\\Users\\david\\OneDrive\\Documenti\\GitHub\\Gestionali\\elettrix_ILUCCHI001C.xlsx");
+	@Override
+	public List<ArticoloOrdinato> leggiOrdine(File file) throws IOException, BadFileFormatException {
+		if (file==null) throw new IOException("Errore! FIle null");
+		List<ArticoloOrdinato> ordine =new ArrayList<>();
 		FileInputStream fis = new FileInputStream(file);
 		XSSFWorkbook workbook = new XSSFWorkbook(fis);
 		XSSFSheet sheet = workbook.getSheetAt(0); //inizia da 0
@@ -28,11 +29,11 @@ public class MyMain {
 			String marca = sheet.getRow(i).getCell(2).getStringCellValue();
 			String codice = sheet.getRow(i).getCell(3).getStringCellValue();
 			double quantita = sheet.getRow(i).getCell(6).getNumericCellValue();
-			
-			System.out.println(marca + " - " + codice + ": " + quantita);
+			ordine.add(new ArticoloOrdinato(codice, marca, quantita));
 		}
-		
 		workbook.close();
 		fis.close();
+		return ordine;
 	}
+
 }

@@ -8,7 +8,6 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 import inventario.controller.Controller;
 import inventario.model.Articolo;
 import inventario.model.Reparto;
@@ -25,6 +24,7 @@ import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 
 public class MainPane extends BorderPane{
 	private Controller controller;
@@ -79,6 +79,7 @@ public class MainPane extends BorderPane{
 			VBox trovaArticolo = new VBox(2);
 			
 			VBox aggiungiArticolo = new VBox(2);
+			
 			aggiungiArticolo.setSpacing(10);
 			{
 				trovaArticolo.getChildren().add(new Label("Trova Articolo"));
@@ -99,12 +100,21 @@ public class MainPane extends BorderPane{
 				aggiungi = new Button("Aggiungi");
 				aggiungi.setOnAction(this::handleAggiungi);
 				aggiungiArticolo.getChildren().addAll(nomeNuovo, marcaNuova, new Label("Nello scaffale:"),scaffale, new Label("Nel reparto:"), repartiBox2, aggiungi);
+				//EEE
+				Button chooserButton = new Button("Scegli file");
+				chooserButton.setOnAction(this::fileSelection);
+				aggiungiArticolo.getChildren().add(chooserButton);
 			}
 			gestioneSinistra2.getChildren().addAll(trovaArticolo, aggiungiArticolo);
 			sinistra.getChildren().addAll(gestioneSinistra1, gestioneSinistra2);
 		}
 		this.setLeft(sinistra);
 		this.setRight(destra);
+	}
+	
+	private void fileSelection(ActionEvent e) {
+		FileChooser f = new FileChooser();
+		f.showOpenDialog()?
 	}
 	
 	private void handleScaffale(ActionEvent e) {
