@@ -39,6 +39,8 @@ public class SezioneSinistra extends VBox {
 	private ComboBox<String> repartiBox2;
 	private ComboBox<Scaffale> scaffaliBox;
 	
+	private Button aggiorna;
+	
 	public SezioneSinistra(Controller controller) {
 		this.controller = controller;
 		init();
@@ -98,7 +100,9 @@ public class SezioneSinistra extends VBox {
 				scaffale = new TextField();
 				aggiungi = new Button("Aggiungi");
 				aggiungi.setOnAction(this::handleAggiungi);
-				aggiungiArticolo.getChildren().addAll(new Label("Aggiungi articolo"),nomeNuovo, marcaNuova, new Label("Nello scaffale:"),scaffale, new Label("Nel reparto:"), repartiBox2, aggiungi);
+				aggiorna = new Button("Aggiorna"); //TOGLIERE IN FUTURO
+				aggiorna.setOnAction(this::aggiornaPannelli);
+				aggiungiArticolo.getChildren().addAll(new Label("Aggiungi articolo"),nomeNuovo, marcaNuova, new Label("Nello scaffale:"),scaffale, new Label("Nel reparto:"), repartiBox2, aggiungi, aggiorna);
 			}
 		gestioneSinistra2.getChildren().addAll(trovaArticolo, aggiungiArticolo);
 		
@@ -125,7 +129,6 @@ public class SezioneSinistra extends VBox {
 	
 	private void sceltaScaffale(ActionEvent e) {
 		aggiornaPannelli(e);
-
 	}
 	
 	private void handleAggiungi(ActionEvent e) {

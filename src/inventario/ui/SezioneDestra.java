@@ -35,6 +35,7 @@ public class SezioneDestra  extends VBox {
 	private TextArea resocontoArea;
 	private Button stampaSuFile;
 	private ArticoloOrdinato cercato;
+
 	
 	public SezioneDestra(ControllerGranese controller) {
 		this.controller = controller;
@@ -95,10 +96,6 @@ public class SezioneDestra  extends VBox {
 		gestioneDestra2.getChildren().addAll(ricercaArticolo, resoconto);
 		
 		this.getChildren().addAll(gestioneDestra1, gestioneDestra2);
-	}
-	
-	public void aggiornaPannelliDastra() {
-		
 	}
 	
 	private void caricaOrdine(ActionEvent e) {

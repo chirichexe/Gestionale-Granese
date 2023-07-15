@@ -10,3 +10,9 @@ scaffale 2,Piano sopra: 3008,STN
 scaffale 1,Piano sotto: IOSLIM16WR346,MCI
 
 scaffale 2,Piano sopra: CHRCHELLA,CHR
+
+scaffale 2,Piano sopra: CIAO,BTN
+
+scaffale 2,Piano sopra: CRN/35,CAV
+
+scaffale 2,Piano sopra: C110,ITL

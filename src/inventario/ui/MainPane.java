@@ -17,7 +17,6 @@ public class MainPane extends BorderPane{
 	private void init() {
 		SezioneDestra destra = new SezioneDestra(controller);
 		SezioneSinistra sinistra = new SezioneSinistra(controller);
-		
 		this.setCenter(destra);
 		this.setLeft(sinistra);
 	}
