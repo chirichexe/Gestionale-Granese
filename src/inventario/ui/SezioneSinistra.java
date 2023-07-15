@@ -49,7 +49,6 @@ public class SezioneSinistra extends VBox {
 		this.setSpacing(10);
 		this.setPadding(new Insets(10, 10, 0, 10));
 		this.setBorder(Border.stroke(javafx.scene.paint.Paint.valueOf("Lightgrey")));
-		List<String> reparti = controller.getMagazzino().get().stream().map(i->i.getID()).collect(Collectors.toList());
 		//TESTO IN ALTO
 		topLabel = new Label("Magazzino");
 		topLabel.setFont(Font.font("Poppins", FontWeight.BOLD, 20));
@@ -70,7 +69,7 @@ public class SezioneSinistra extends VBox {
 			{
 			scaffaliTextArea = new TextArea();
 			scaffaliTextArea.setPrefWidth(250);
-			repartiBox = new ComboBox<>(FXCollections.observableArrayList(reparti));
+			repartiBox = new ComboBox<>(FXCollections.observableArrayList(controller.getMagazzino().getIdReparti()));
 			repartiBox.setOnAction(this::handleScaffale);
 			scaffaliBox = new ComboBox<>();
 			gestioneScaffali.getChildren().addAll(new Label("Ottieni il reparto "), repartiBox, scaffaliTextArea);
@@ -93,7 +92,7 @@ public class SezioneSinistra extends VBox {
 			//2) aggiungi articolo
 			VBox aggiungiArticolo = new VBox();
 			{
-				repartiBox2 = new ComboBox<>(FXCollections.observableArrayList(reparti));
+				repartiBox2 = new ComboBox<>(FXCollections.observableArrayList(controller.getMagazzino().getIdReparti()));
 				nomeNuovo = new TextField();
 				marcaNuova = new TextField();
 				scaffale = new TextField();
@@ -108,6 +107,14 @@ public class SezioneSinistra extends VBox {
 
 	}
 	
+	public void aggiornaPannelli(ActionEvent e) {
+		magazzinoTextArea.setText(controller.stampaMagazzino());
+		scaffaliTextArea.setText(scaffaliBox.getValue().toString()+"\n\n");
+		controller.getMagazzino().getReparto(repartiBox.getValue()).get().
+		getArticoliScaffale(scaffaliBox.getValue())
+		.forEach(i->scaffaliTextArea.appendText(i.toString().concat("\n")));
+	}
+	
 	private void handleScaffale(ActionEvent e) {
 		scaffaliTextArea.setText(controller.getMagazzino().getReparto(repartiBox.getValue()).get().toString());
 		gestioneScaffali.getChildren().remove(scaffaliBox);
@@ -117,10 +124,8 @@ public class SezioneSinistra extends VBox {
 	}
 	
 	private void sceltaScaffale(ActionEvent e) {
-		scaffaliTextArea.setText(scaffaliBox.getValue().toString()+"\n\n");
-	controller.getMagazzino().getReparto(repartiBox.getValue()).get().
-				getArticoliScaffale(scaffaliBox.getValue())
-				.forEach(i->scaffaliTextArea.appendText(i.toString().concat("\n")));
+		aggiornaPannelli(e);
+
 	}
 	
 	private void handleAggiungi(ActionEvent e) {
@@ -135,14 +140,7 @@ public class SezioneSinistra extends VBox {
 					new Articolo(nomeNuovo.getText());
 		if (controller.aggiungiArticolo(Scaffale.of(scaffaleInt, repartiBox2.getValue()), daAggiungere) == false) InventarioGraneseApp.alertError("Errore", "Errore aggiunta articolo","Articolo non valido o già presente");
 		else {
-			magazzinoTextArea.setText(controller.stampaMagazzino());
-			try {
-				controller.scriviSuFile("\nscaffale "+ scaffale.getText() + ","+ repartiBox2.getValue() + ": " + nomeNuovo.getText().toUpperCase() + "," + marcaNuova.getText().toUpperCase());
-				System.out.println("Scrittura avvenuta con successo!");
-			} catch (Exception e1) {
-				InventarioGraneseApp.alertError("", "", "ok");
-				e1.printStackTrace();
-			}
+			aggiornaPannelli(e);
 		}
 	}
 	

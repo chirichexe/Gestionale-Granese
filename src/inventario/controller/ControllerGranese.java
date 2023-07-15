@@ -12,6 +12,7 @@ import inventario.model.ArticoloOrdinato;
 import inventario.model.Magazzino;
 import inventario.model.Ordine;
 import inventario.model.Scaffale;
+import inventario.ui.InventarioGraneseApp;
 
 public class ControllerGranese implements Controller{
 	private Magazzino magazzino;
@@ -38,7 +39,23 @@ public class ControllerGranese implements Controller{
 	}
 	@Override
 	public boolean aggiungiArticolo(Scaffale scaffale, Articolo a) {
+		try {
+			scriviSuFile("\nscaffale "+ scaffale.getNumero() + ","+ scaffale.getReparto() + ": " + a.getCodice().toUpperCase() + "," + a.getSigla().toUpperCase());
+			System.out.println("Scrittura avvenuta con successo!");
+		} catch (Exception e1) {
+			InventarioGraneseApp.alertError("", "", "ok");
+			e1.printStackTrace();
+		}
 		return magazzino.inserisci(scaffale, a);
+	}
+	
+	public boolean aggiungiArticolo(String scaffale, String reparto,  Articolo a) {
+		int posizione = 0;
+		try {
+			posizione = Integer.parseInt(scaffale);
+		}catch(Exception e){
+		}
+		return aggiungiArticolo(Scaffale.of(posizione, reparto), a);
 	}
 	
 	public void riempiOrdine(List<ArticoloOrdinato> ordineAttuale) {

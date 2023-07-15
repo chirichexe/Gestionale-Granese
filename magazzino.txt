@@ -8,3 +8,5 @@ scaffale 1, Piano sopra: 8008/M,STN
 scaffale 2,Piano sopra: 1009/C,STN
 scaffale 2,Piano sopra: 3008,STN
 scaffale 1,Piano sotto: IOSLIM16WR346,MCI
+
+scaffale 2,Piano sopra: CHRCHELLA,CHR

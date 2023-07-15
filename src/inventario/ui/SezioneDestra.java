@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import inventario.controller.Controller;
 import inventario.controller.ControllerGranese;
+import inventario.model.Articolo;
 import inventario.model.ArticoloOrdinato;
 import inventario.model.Scaffale;
 import javafx.event.ActionEvent;
@@ -33,6 +34,7 @@ public class SezioneDestra  extends VBox {
 	private TextArea esito;
 	private TextArea resocontoArea;
 	private Button stampaSuFile;
+	private ArticoloOrdinato cercato;
 	
 	public SezioneDestra(ControllerGranese controller) {
 		this.controller = controller;
@@ -95,6 +97,10 @@ public class SezioneDestra  extends VBox {
 		this.getChildren().addAll(gestioneDestra1, gestioneDestra2);
 	}
 	
+	public void aggiornaPannelliDastra() {
+		
+	}
+	
 	private void caricaOrdine(ActionEvent e) {
 		ordineTextArea.setText(controller.stampaOrdine());
 	}
@@ -108,14 +114,14 @@ public class SezioneDestra  extends VBox {
 			InventarioGraneseApp.alertError("Errore", "Errore conversione intero", ex.getMessage());
 		}
 		if (controller.getOrdine().presente(new ArticoloOrdinato(codiceField.getText(), "",	quantitaCercata))) {
-			ArticoloOrdinato cercato = controller.getOrdine().getDaCodice(codiceField.getText()).get();
+			cercato = controller.getOrdine().getDaCodice(codiceField.getText()).get();
 			esito.setText("Articolo [" + cercato.getCodice()  + "] Presente\n" + 
 						  "Quantità " + (cercato.getQuantità() == quantitaCercata ? 
 								  "giusta:\nTrovati ": "sbagliata:\nTrovati " ) + quantitaCercata + " su " + cercato.getQuantità() );
 			
 			trovaArticoloNelMagazzino(cercato);
+			controller.getOrdine().rimuovi(cercato); //da filtrare la rimozione
 			ordineTextArea.setText(controller.stampaOrdine());
-			controller.getOrdine().rimuovi(cercato);
 		}else {
 			InventarioGraneseApp.alertError("Attenzione!", "Articolo " + codiceField.getText() +" non trovato!", "Ricontrolla bene o inseriscilo nel resoconto");
 		}
@@ -125,7 +131,8 @@ public class SezioneDestra  extends VBox {
 		Optional<Scaffale> el = controller.posizioneArticoloMagazzino(a);
 		if(!el.isEmpty()) esito.appendText("\n\nDa inserire nel\n" + el.get().toString());
 		else {
-			InventarioGraneseApp.alertInfo("Attenzione", "L'articolo ordinato non è ancora nel magazzino", "Aggiungilo in uno scaffale");
+			System.out.println(cercato.getCodice());
+			InventarioGraneseApp.alertInfo("Attenzione", "Aggiungi", "L'articolo inserito non è presente nel magazzino", new Articolo( cercato.getCodice(), cercato.getSigla() ));
 			
 		}
 	}

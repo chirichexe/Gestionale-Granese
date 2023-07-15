@@ -82,6 +82,10 @@ public class Magazzino {
 		return magazzino.get(id).getArticoliScaffale(i);
 	}
 	
+	public List<String> getIdReparti() {
+		return magazzino.stream().map(i->i.getID()).collect(Collectors.toList());
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("");

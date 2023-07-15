@@ -7,19 +7,19 @@ import javafx.stage.Stage;
 
 public class MainPane extends BorderPane{
 	
-	private Stage stage;
-	
 	private ControllerGranese controller;
 	
-	public MainPane(ControllerGranese controller, Stage stage) {
+	public MainPane(ControllerGranese controller) {
 		this.controller = controller;
-		this.stage = stage;
 		init();
 	}
 	
 	private void init() {
-		this.setRight(new SezioneDestra(controller));
-		this.setCenter(new SezioneSinistra(controller));
+		SezioneDestra destra = new SezioneDestra(controller);
+		SezioneSinistra sinistra = new SezioneSinistra(controller);
+		
+		this.setCenter(destra);
+		this.setLeft(sinistra);
 	}
 	
 
