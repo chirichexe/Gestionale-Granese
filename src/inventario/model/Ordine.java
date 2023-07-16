@@ -60,7 +60,15 @@ public class Ordine {
 
 	
 	public void rimuovi(ArticoloOrdinato a) {
-		ordineDelGiorno.remove(a);
+		System.out.println(a.toString());
+		ArticoloOrdinato presente =	getDaCodice(a.getCodice()).get();
+		double differenzaQuantita = Math.abs(presente.getQuantità()-a.getQuantità());
+		System.out.println(differenzaQuantita);
+		if(differenzaQuantita==0)
+			ordineDelGiorno.remove(a);
+		else {
+			getDaCodice(a.getCodice()).get().aggiungiElementi(-differenzaQuantita);
+		}
 	}
 	
 

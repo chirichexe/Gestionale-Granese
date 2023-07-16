@@ -36,6 +36,8 @@ import javafx.stage.Stage;
 public class InventarioGraneseApp extends Application {
 	
 	private static ControllerGranese c;
+	private ControllerGranese controller;
+	private Stage stage;
 	private static TextField scegliScaffale;
 	private static ComboBox<String> scegliReparto;
 	private TextField txt1, txt2;
@@ -67,24 +69,21 @@ public class InventarioGraneseApp extends Application {
 
 	
 	@Override
-	public void start(Stage stage) throws Exception { 
+	public void start(Stage stage) throws Exception {
+		this.stage = stage;
 		stage.setTitle("Magazzino Granese");
 		try {
 			//1. LETTURA MAGAZZINO DA FILE TESTO
 			
 			MagazzinoGraneseReader reader = new MagazzinoGraneseReader();
 			Magazzino magazzino = reader.leggiMagazzino(new FileReader("magazzino.txt"));
-			ControllerGranese controller = new ControllerGranese(magazzino);
+			controller = new ControllerGranese(magazzino);
 			c = controller;
 			
 			//2. LETTURA MAGAZZINO DA FILE EXCEL
-			OrdineGraneseReader readerOrdine = new OrdineGraneseReader();
-	
-	File file =new File("C:\\Users\\utente\\Documents\\GitHub\\Gestionali\\elettrix_ILUCCHI001C.xlsx"); //DA FAR INTERAGIRE CON FILEPICKER
 			
-			controller.riempiOrdine(readerOrdine.leggiOrdine(file));
 			//IMPOSTAZIONE SCENA
-			MainPane mainPanel = new MainPane(controller);
+			MainPane mainPanel = new MainPane(controller, stage);
 			Scene scene = new Scene(mainPanel, 1100, 720, Color.WHITE);
 			stage.setScene(scene);
 			stage.show();

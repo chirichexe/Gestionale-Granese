@@ -1,5 +1,7 @@
 package inventario.ui;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -9,6 +11,8 @@ import inventario.controller.ControllerGranese;
 import inventario.model.Articolo;
 import inventario.model.ArticoloOrdinato;
 import inventario.model.Scaffale;
+import inventario.persistence.BadFileFormatException;
+import inventario.persistence.OrdineGraneseReader;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -20,12 +24,15 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 public class SezioneDestra  extends VBox {
 	
+	private Stage stage;
 	private ControllerGranese controller;
 	private Label topLabel;
-	private Button scegliFile;
+	private Button mostraOrdine;
 	private TextArea ordineTextArea;
 	private TextArea marcaTextArea;
 	private TextField codiceField;
@@ -37,8 +44,9 @@ public class SezioneDestra  extends VBox {
 	private ArticoloOrdinato cercato;
 
 	
-	public SezioneDestra(ControllerGranese controller) {
+	public SezioneDestra(ControllerGranese controller, Stage stage) {
 		this.controller = controller;
+		this.stage = stage;
 		init();
 	}
 	
@@ -56,11 +64,21 @@ public class SezioneDestra  extends VBox {
 			//1) scelta file ordine
 			VBox sceltaFile = new VBox(5);
 			{
-			scegliFile = new Button("Scegli file");
-			scegliFile.setOnAction(this::caricaOrdine);
+			mostraOrdine = new Button("Scegli File");
+			mostraOrdine.setOnAction(arg0 -> {
+				try {
+					scegli(arg0);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (BadFileFormatException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			});
 			ordineTextArea = new TextArea();
 			ordineTextArea.setPrefSize(250, 400);
-			sceltaFile.getChildren().addAll(scegliFile, ordineTextArea);
+			sceltaFile.getChildren().addAll(mostraOrdine, ordineTextArea);
 			}
 			//2) filtra ordine
 			VBox filtraOrdine = new VBox(5);
@@ -97,9 +115,19 @@ public class SezioneDestra  extends VBox {
 		
 		this.getChildren().addAll(gestioneDestra1, gestioneDestra2);
 	}
+
 	
 	private void caricaOrdine(ActionEvent e) {
 		ordineTextArea.setText(controller.stampaOrdine());
+	}
+	
+	
+	private void scegli(ActionEvent e) throws IOException, BadFileFormatException {
+		FileChooser fc = new FileChooser();
+		OrdineGraneseReader readerOrdine = new OrdineGraneseReader();
+		File file = fc.showOpenDialog(stage);
+		controller.riempiOrdine(readerOrdine.leggiOrdine(file));
+		caricaOrdine(e);
 	}
 	
 	private void trovaArticoloOrdine(ActionEvent e){
@@ -117,7 +145,7 @@ public class SezioneDestra  extends VBox {
 								  "giusta:\nTrovati ": "sbagliata:\nTrovati " ) + quantitaCercata + " su " + cercato.getQuantità() );
 			
 			trovaArticoloNelMagazzino(cercato);
-			controller.getOrdine().rimuovi(cercato); //da filtrare la rimozione
+			controller.getOrdine().rimuovi(new ArticoloOrdinato(cercato.getCodice(), cercato.getSigla(), quantitaCercata)); //da filtrare la rimozione
 			ordineTextArea.setText(controller.stampaOrdine());
 		}else {
 			InventarioGraneseApp.alertError("Attenzione!", "Articolo " + codiceField.getText() +" non trovato!", "Ricontrolla bene o inseriscilo nel resoconto");
@@ -128,7 +156,6 @@ public class SezioneDestra  extends VBox {
 		Optional<Scaffale> el = controller.posizioneArticoloMagazzino(a);
 		if(!el.isEmpty()) esito.appendText("\n\nDa inserire nel\n" + el.get().toString());
 		else {
-			System.out.println(cercato.getCodice());
 			InventarioGraneseApp.alertInfo("Attenzione", "Aggiungi", "L'articolo inserito non è presente nel magazzino", new Articolo( cercato.getCodice(), cercato.getSigla() ));
 			
 		}

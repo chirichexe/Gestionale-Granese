@@ -41,7 +41,6 @@ public class MagazzinoGraneseReader implements MagazzinoReader {
 			}catch(Exception e) {
 				throw new BadFileFormatException("Errore lettura linea! " + line + "\n"+ e.getMessage());
 			}
-			System.out.println(reparto);
 			if(!items[1].contains(";")) magazzino.inserisciArticoloScaffale(reparto, scaffale, leggiUno(items[1]));
 			else magazzino.inserisciArticoliScaffale(reparto, scaffale, leggiElenco(items[1]));
 		}
