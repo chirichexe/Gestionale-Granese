@@ -84,7 +84,7 @@ public class InventarioGraneseApp extends Application {
 			
 			//IMPOSTAZIONE SCENA
 			MainPane mainPanel = new MainPane(controller, stage);
-			Scene scene = new Scene(mainPanel, 1100, 720, Color.WHITE);
+			Scene scene = new Scene(mainPanel, 1300, 725, Color.WHITE);
 			stage.setScene(scene);
 			stage.show();
 				

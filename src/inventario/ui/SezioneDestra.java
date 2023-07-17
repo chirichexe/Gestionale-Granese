@@ -2,6 +2,7 @@ package inventario.ui;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -13,8 +14,11 @@ import inventario.model.ArticoloOrdinato;
 import inventario.model.Scaffale;
 import inventario.persistence.BadFileFormatException;
 import inventario.persistence.OrdineGraneseReader;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -35,6 +39,8 @@ public class SezioneDestra  extends VBox {
 	private Button mostraOrdine;
 	private TextArea ordineTextArea;
 	private TextArea marcaTextArea;
+	private ObservableList<PieChart.Data> dati;
+	private PieChart pieChartArticoli;
 	private TextField codiceField;
 	private TextField quantita;
 	private Button trovaButton;
@@ -69,11 +75,9 @@ public class SezioneDestra  extends VBox {
 				try {
 					scegli(arg0);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					InventarioGraneseApp.alertError("Attenzione!", "Scelta file non valida!", "Clicca ok per chiudere");
 				} catch (BadFileFormatException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					InventarioGraneseApp.alertError("Attenzione!", "Errore nella formattazione del file!", "Controllare tramite Excel");
 				}
 			});
 			ordineTextArea = new TextArea();
@@ -83,9 +87,9 @@ public class SezioneDestra  extends VBox {
 			//2) filtra ordine
 			VBox filtraOrdine = new VBox(5);
 			{
-			marcaTextArea = new TextArea();
-			marcaTextArea.setPrefSize(250, 300);
-			filtraOrdine.getChildren().addAll(marcaTextArea);
+			pieChartArticoli = new PieChart();
+			//pieChartArticoli.setPrefSize(250, 500);
+			filtraOrdine.getChildren().addAll(pieChartArticoli);
 			}
 		
 		gestioneDestra1.getChildren().addAll(sceltaFile, filtraOrdine);
@@ -106,9 +110,15 @@ public class SezioneDestra  extends VBox {
 			VBox resoconto = new VBox(5);
 			{
 			resocontoArea = new TextArea();
-			resocontoArea.setPrefWidth(200);
 			stampaSuFile = new Button("Stampa resoconto");
-		
+			stampaSuFile.setOnAction(e->{
+				try {
+					controller.creaEScrivi(resocontoArea.getText());
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			});
 			resoconto.getChildren().addAll(resocontoArea, stampaSuFile);
 			}
 		gestioneDestra2.getChildren().addAll(ricercaArticolo, resoconto);
@@ -126,8 +136,14 @@ public class SezioneDestra  extends VBox {
 		FileChooser fc = new FileChooser();
 		OrdineGraneseReader readerOrdine = new OrdineGraneseReader();
 		File file = fc.showOpenDialog(stage);
-		controller.riempiOrdine(readerOrdine.leggiOrdine(file));
-		caricaOrdine(e);
+		if (file == null) controller.riempiOrdine(new ArrayList<>());
+		else{controller.riempiOrdine(readerOrdine.leggiOrdine(file));
+			caricaOrdine(e);
+			dati = FXCollections.observableArrayList(controller.getOrdine().get().stream()
+				.map(a->new PieChart.Data(a.getCodice(), a.getQuantità()))
+				.collect(Collectors.toList()));
+			pieChartArticoli.setData(dati);
+		}
 	}
 	
 	private void trovaArticoloOrdine(ActionEvent e){

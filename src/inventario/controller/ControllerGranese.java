@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +23,6 @@ import javafx.stage.Stage;
 public class ControllerGranese implements Controller{
 	private Magazzino magazzino;
 	private Ordine ordine;
-	//private PrintWriter pw;
 	
 	public ControllerGranese(Magazzino m) {
 		this.magazzino = m;
@@ -48,7 +48,7 @@ public class ControllerGranese implements Controller{
 			scriviSuFile("\nscaffale "+ scaffale.getNumero() + ","+ scaffale.getReparto() + ": " + a.getCodice().toUpperCase() + "," + a.getSigla().toUpperCase());
 			System.out.println("Scrittura avvenuta con successo!");
 		} catch (Exception e1) {
-			InventarioGraneseApp.alertError("", "", "ok");
+			InventarioGraneseApp.alertError("Errore", "Errore scrittura su file!", "Premi ok per chiudere");
 			e1.printStackTrace();
 		}
 		return magazzino.inserisci(scaffale, a);
@@ -106,6 +106,16 @@ public class ControllerGranese implements Controller{
 	            fileWriter.close();
 	        }
 	    }
+	}
+
+	@Override
+	public void creaEScrivi(String s) throws IOException {
+		String nomeString = "resoconto_bolletta_" + LocalDate.now().toString();
+		System.out.println(nomeString+".txt");
+		File myFile = new File(nomeString+".txt");
+		FileWriter fWriter = new FileWriter(myFile);
+		fWriter.append("Resoconto" + LocalDate.now().toString() + "\n\n" + s);
+		fWriter.close();
 	}
 
 	

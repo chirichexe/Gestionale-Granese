@@ -17,15 +17,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class MyMain {
 
 	public static void main(String[] args) throws IOException{
-
-		ArticoloOrdinato a1 = new ArticoloOrdinato("aedgf", "efwq", 5);
-		ArticoloOrdinato a2 = new ArticoloOrdinato("aedgf", "efwq", 5);
-		Ordine o = new Ordine();
-		o.aggiungi(a1);
-		o.aggiungi(a2);
-		System.out.println(o.toString());
+	
 	}
-	
-	
-	
+
 }

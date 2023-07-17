@@ -1,5 +1,6 @@
 package inventario.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import inventario.model.Articolo;
@@ -14,6 +15,7 @@ public interface Controller {
 	boolean aggiungiArticolo(Scaffale scaffale, Articolo a);
 	void riempiOrdine(List<ArticoloOrdinato> ordineAttuale);
 	void scriviSuFile(String s);
+	void creaEScrivi(String s) throws IOException;
 	String stampaMagazzino();
 	String stampaOrdine();
 }
